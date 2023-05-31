@@ -16,8 +16,20 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password', 200);
+
+            $table->string("avatar", 255)->nullable();
+            $table->string("cover", 255)->nullable();
+            $table->string("city", 80)->nullable();
+            $table->string("state", 80)->nullable();
+            $table->string("country", 80)->nullable();
+
+            $table->string("birth_date", 10)->nullable();
+            $table->integer("friend_count");
+
+            $table->timestamp('last_online_at')->nullable();
             $table->rememberToken();
+            $table->softDeletesDatetime();
             $table->timestamps();
         });
     }
