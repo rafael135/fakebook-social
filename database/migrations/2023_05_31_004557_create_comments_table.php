@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Post::class);
             $table->text("body");
-            $table->integer("like_count");
+            $table->integer("like_count")->default(0);
 
             $table->softDeletesDatetime();
             $table->timestamps();

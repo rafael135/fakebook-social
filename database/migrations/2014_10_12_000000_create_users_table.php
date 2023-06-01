@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('name', 120);
+            $table->string('email', 150)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 200);
 
@@ -25,7 +26,7 @@ return new class extends Migration
             $table->string("country", 80)->nullable();
 
             $table->string("birth_date", 10)->nullable();
-            $table->integer("friend_count");
+            $table->integer("friend_count")->default(0);
 
             $table->timestamp('last_online_at')->nullable();
             $table->rememberToken();

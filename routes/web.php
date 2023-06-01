@@ -20,5 +20,5 @@ Route::get("/", [HomeController::class, "index"])->name("home");
 Route::get("/register", [AuthController::class, "registerPage"])->name("auth.register");
 Route::get("/login", [AuthController::class, "loginPage"])->name("auth.login");
 
-Route::post("register", [AuthController::class, "registerAction"])->name("auth.registerAction");
+Route::post("/register", [AuthController::class, "registerAction"])->name("auth.registerAction");
 Route::post("/login", [AuthController::class, "loginAction"])->name("auth.loginAction");
