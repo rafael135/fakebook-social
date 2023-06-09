@@ -4,10 +4,19 @@ export default {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        "128": "32rem",
+        "144": "36rem",
+        "156": "40rem"
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    require("flowbite/plugin")
+  ],
 }
 

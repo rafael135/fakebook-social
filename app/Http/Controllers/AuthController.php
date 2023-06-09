@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -57,6 +58,16 @@ class AuthController extends Controller
         if($data != null) {
             $hash = Hash::make($data["password"]);
             $data["password"] = $hash;
+
+            $completeName = $data["name"];
+
+            $uniqueUrl = str_replace(' ', '-', $completeName) . "-" . random_int(9999, 99999999);
+
+            while( DB::table("users")->select()->where("uniqueUrl", "=", $uniqueUrl)->count() > 0 ) {
+                $uniqueUrl = str_replace(' ', '-', $completeName) . "-" . random_int(9999, 99999999);
+            }
+
+            $data["uniqueUrl"] = $uniqueUrl;
 
             // Caso for cadastrado com sucesso, retorna o Model User
             $result = User::create($data);
@@ -112,5 +123,59 @@ class AuthController extends Controller
         $request->session()->regenerate(true);
 
         return redirect()->route("auth.login");
+    }
+
+
+
+
+
+    public function createUser(CreateUserRequest $request) {
+        $data = $request->only([
+            "name",
+            "email",
+            "password"
+        ]);
+
+        $passwordConfirm = $request->input("passwordConfirm", false);
+
+        if ($data["password"] != $passwordConfirm) {
+            return response()->json([
+                "response" => "As senhas sao diferentes!",
+                "status" => 400
+            ], 400);
+        }
+
+        if($data != null) {
+            $hash = Hash::make($data["password"]);
+            $data["password"] = $hash;
+
+            $completeName = $data["name"];
+
+            $uniqueUrl = str_replace(' ', '-', $completeName) . "-" . random_int(9999, 99999999);
+
+            while( DB::table("users")->select()->where("uniqueUrl", "=", $uniqueUrl)->count() > 0 ) {
+                $uniqueUrl = str_replace(' ', '-', $completeName) . "-" . random_int(9999, 99999999);
+            }
+
+            $data["uniqueUrl"] = $uniqueUrl;
+
+            $email = $data["email"];
+            if(DB::table("users")->select()->where("email", "=", $email)->count() > 0) {
+                return response()->json([
+                    "response" => "Email em uso!",
+                    "status" => 400
+                ], 400);
+            }
+
+            // Caso for cadastrado com sucesso, retorna o Model User
+            $result = User::create($data);
+
+            if($result != null) {
+                return response()->json([
+                    "response" => $result,
+                    "status" => 201
+                ], 201);
+            }
+        }
     }
 }

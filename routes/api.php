@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\Authenticate;
@@ -26,3 +27,8 @@ Route::get("/user/{id}", [UserController::class, "getUserById"])->withoutMiddlew
 
 Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class]);
 Route::get("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class]);
+
+Route::post("/post/like/{id}", [PostController::class, "likePostById"])->withoutMiddleware([Authenticate::class]);
+
+
+Route::post("/user/register", [AuthController::class, "createUser"])->withoutMiddleware([Authenticate::class]);

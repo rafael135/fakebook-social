@@ -1,7 +1,16 @@
-@include("partials.header")
+@extends("layouts.layout")
 
-@include("partials.navbar")
+@section("content")
 
-Teste
+    <div class="posts flex flex-col items-center gap-3 bg-gray-50">
+        @foreach ($feedPosts as $post)
+            <x-post :post="$post"/>
+        @endforeach
+        
+    </div>
 
-@include("partials.footer")
+    <script src="{{asset("assets/js/ajax/js/Post/postInteractions.js")}}"></script>
+
+    
+
+@endsection

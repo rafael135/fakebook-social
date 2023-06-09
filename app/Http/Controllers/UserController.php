@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Routing\Route;
+use Hamcrest\Type\IsString;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+
+    // Métodos para rotas de API:
     public function getUserById(Request $request) : JsonResponse {
         $id = $request->route()->parameter("id", null);
 
@@ -28,7 +35,7 @@ class UserController extends Controller
         }
 
         return response()->json([
-            "response" => $user,
+            "response" => $user->toJson(),
             "status" => 200
         ], 200);
     }
@@ -57,8 +64,49 @@ class UserController extends Controller
         $posts = $user->posts;
 
         return response()->json([
-            "response" => $posts,
+            "response" => $posts->toJson(),
             "status" => 200
         ], 200);
+    }
+    // ------------------------------------------------------------
+
+    public function showUser(Request $request) {
+        $loggedUser = AuthController::checkLogin();
+
+        $uniqueUrl = $request->route()->parameter("uniqueUrl", null);
+
+        if($uniqueUrl == null) {
+            return redirect()->route("home");
+        }
+
+        $rawData = DB::table("users")->select(["id"])->where("uniqueUrl", "=", $uniqueUrl)->get();
+
+        if($rawData->count() == 0) {
+            return redirect()->route("home");
+        }
+
+        $userId = $rawData->first()->id;
+
+        $user = User::find($userId);
+
+        return view("User.profile", [
+            "loggedUser" => $loggedUser,
+            "profileInfo" => $user
+        ]);
+    }
+
+    public function userConfig(Request $request) {
+        $loggedUser = AuthController::checkLogin();
+
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
+
+        $opt = $request->input("option", false);
+
+        return view("User.Config.profile", [
+            "loggedUser" => $loggedUser,
+            "optionPage" => $opt
+        ]);
     }
 }

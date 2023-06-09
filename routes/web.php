@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +23,10 @@ Route::get("/login", [AuthController::class, "loginPage"])->name("auth.login");
 
 Route::post("/register", [AuthController::class, "registerAction"])->name("auth.registerAction");
 Route::post("/login", [AuthController::class, "loginAction"])->name("auth.loginAction");
+
+
+Route::get("/user/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
+
+Route::get("/user/config", [UserController::class, "userConfig"])->name("user.config");
+
+Route::get("/logout", [AuthController::class, "logout"])->name("user.logout");

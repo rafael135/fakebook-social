@@ -18,6 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        "uniqueUrl",
         'name',
         'email',
         'password',
@@ -61,6 +62,6 @@ class User extends Authenticatable
     }
 
     public function friends() {
-        return $this->hasMany(FriendRelation::class);
+        return $this->hasMany(FriendRelation::class, "user_from", "id");
     }
 }
