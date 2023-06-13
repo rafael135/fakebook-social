@@ -12,6 +12,7 @@ class Post extends Model
     protected $table = "posts";
 
     protected $fillable = [
+        "user_id",
         "type",
         "body",
         "like_count",
@@ -25,5 +26,9 @@ class Post extends Model
 
     public function comments() {
         return $this->hasMany(Comment::class);
+    }
+
+    public function postLike() {
+        return $this->hasOne(PostLike::class, "post_id", "id");
     }
 }

@@ -1,4 +1,4 @@
-import * as Requests from "../BASE/RequestTypes";
+import * as Requests from "../BASE/RequestTypes.js";
 
 
 let formRegister = document.getElementById("registerForm");

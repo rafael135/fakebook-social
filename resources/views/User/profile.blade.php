@@ -2,6 +2,6 @@
 
 @section("content")
 
-    Teste
+    <div></div>
 
 @endsection

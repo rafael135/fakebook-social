@@ -24,7 +24,7 @@ class LoginRequest extends FormRequest
         return [
             "email" => "required|email|max:150",
             "password" => "required|min:8|max:200",
-            "remember" => "numeric"
+            "remember" => "string"
         ];
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FriendRelationsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +30,8 @@ Route::post("/login", [AuthController::class, "loginAction"])->name("auth.loginA
 Route::get("/user/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
 
 Route::get("/user/config", [UserController::class, "userConfig"])->name("user.config");
+
+Route::get("/user/friends", [FriendRelationsController::class, "showFriends"])->name("user.friends");
+Route::get("/user/messages", [MessageController::class, "showMessages"])->name("user.messages");
 
 Route::get("/logout", [AuthController::class, "logout"])->name("user.logout");

@@ -25,10 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get("/user/{id}/posts", [UserController::class, "getUserPosts"])->withoutMiddleware([Authenticate::class]);
 Route::get("/user/{id}", [UserController::class, "getUserById"])->withoutMiddleware([Authenticate::class]);
 
+Route::post("/post/new", [PostController::class, "newPost"])->withoutMiddleware(Authenticate::class)->name("api.post.new");
 Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class]);
 Route::get("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class]);
 
-Route::post("/post/like/{id}", [PostController::class, "likePostById"])->withoutMiddleware([Authenticate::class]);
+Route::post("/post/{id}/like", [PostController::class, "likePostById"])->withoutMiddleware([Authenticate::class])->name("api.post.like");
 
 
 Route::post("/user/register", [AuthController::class, "createUser"])->withoutMiddleware([Authenticate::class]);

@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    private function getPostsOfUsers($usersIds) {
+    private function getPostsOfUsers($usersIds, $loggedUser) {
         $posts = collect();
 
         foreach($usersIds as $userId) {
@@ -16,6 +17,8 @@ class HomeController extends Controller
             $userPosts = $usr->posts;
             
             foreach($userPosts as $post) {
+                $postLike = DB::table("posts_likes")->select()->where("post_id", "=", $post->id)->where("user_id", "=", $loggedUser->id)->get()->count();
+                $post["liked"] = ($postLike > 0) ? true : false;
                 $posts->push($post);
             }
         }
@@ -25,19 +28,29 @@ class HomeController extends Controller
 
     public function index(Request $request) {
         $loggedUser = AuthController::checkLogin();
-        //if($loggedUser == false) {
-        //    return redirect()->route("auth.login");
-        //}
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
         
         $loggedUser = User::find(1);
 
         $friends = FriendRelationsController::getRelationsOf($loggedUser);
 
-        $feedPosts = $this->getPostsOfUsers($friends);
 
-        $feedPosts = $feedPosts->sortBy(function($product, int $key) {
+
+        $feedPosts = $this->getPostsOfUsers($friends, $loggedUser);
+
+        $userPosts = $loggedUser->posts;
+
+        foreach($userPosts as $userPost) {
+            $postLike = DB::table("posts_likes")->select()->where("post_id", "=", $userPost->id)->where("user_id", "=", $loggedUser->id)->get()->count();
+            $userPost["liked"] = ($postLike > 0) ? true : false;
+            $feedPosts->add($userPost);
+        }
+
+        $feedPosts = $feedPosts->sortBy(function($post, int $key) {
             
-            return $product->updated_at->toArray()["timestamp"];
+            return -$post->updated_at->toArray()["timestamp"];
         });
 
         //dd($feedPosts);
