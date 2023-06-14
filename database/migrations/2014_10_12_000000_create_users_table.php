@@ -27,7 +27,8 @@ return new class extends Migration
             $table->string("country", 80)->nullable();
 
             $table->string("birth_date", 10)->nullable();
-            $table->integer("friend_count")->default(0);
+            $table->integer("following_count")->default(0);
+            $table->integer("followers_count")->default(0);
 
             $table->timestamp('last_online_at')->nullable();
             $table->rememberToken();

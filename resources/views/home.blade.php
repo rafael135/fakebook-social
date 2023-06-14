@@ -1,7 +1,7 @@
 @extends("layouts.layout")
 
 @section("content")
-    <div id="newPostForm" class="post-action mx-auto mt-4 p-4 bg-gradient-to-r from-blue-600 from-70% to-blue-700 rounded-md flex gap-4 justify-center items-center lg:w-10/12">
+    <div id="newPostForm" class="post-action mx-8 lg:mx-auto mt-4 p-4 bg-gradient-to-r from-blue-600 from-70% to-blue-700 rounded-md flex gap-4 justify-center items-center lg:w-10/12">
         <a class="flex-1 border text-decoration-none border-solid rounded-lg border-gray-200 bg-gray-50 text-gray-800 px-3 py-4 focus-visible:outline-0" contenteditable="true" id="newPost" aria-multiline="true" aria-placeholder="">
             <span contenteditable="false" class="">O que você está pensando hoje {{$loggedUser->name}}?</span>
         </a>

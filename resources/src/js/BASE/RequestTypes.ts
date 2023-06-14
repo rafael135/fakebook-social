@@ -51,3 +51,17 @@ export type PostLikeType = {
     response: boolean | string | PostLike,
     status: number
 }
+
+
+export type FriendRelation = {
+    id: number,
+    user_from: number,
+    user_to: number,
+    created_at: string,
+    updated_at: string
+}
+
+export type FriendRelationRequest = {
+    response: boolean | FriendRelation,
+    status: number
+}

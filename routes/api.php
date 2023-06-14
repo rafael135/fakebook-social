@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get("/user/{id}/posts", [UserController::class, "getUserPosts"])->withoutMiddleware([Authenticate::class]);
 Route::get("/user/{id}", [UserController::class, "getUserById"])->withoutMiddleware([Authenticate::class]);
 
+Route::post("/user/{id}/follow", [UserController::class, "followUser"])->withoutMiddleware([Authenticate::class])->name("api.user.follow");
+
 Route::post("/post/new", [PostController::class, "newPost"])->withoutMiddleware(Authenticate::class)->name("api.post.new");
 Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class]);
 Route::get("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class]);

@@ -31,10 +31,8 @@ class HomeController extends Controller
         if($loggedUser == false) {
             return redirect()->route("auth.login");
         }
-        
-        $loggedUser = User::find(1);
 
-        $friends = FriendRelationsController::getRelationsOf($loggedUser);
+        $friends = FriendRelationsController::getFollowing($loggedUser);
 
 
 

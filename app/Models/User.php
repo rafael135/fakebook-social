@@ -28,7 +28,8 @@ class User extends Authenticatable
         "state",
         "country",
         "birth_date",
-        "friend_count",
+        "following_count",
+        "followers_count",
         "last_online_at"
     ];
 
@@ -61,7 +62,17 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function friends() {
+    /**
+     * Retorna quem o Usuário está seguindo
+     */
+    public function following() {
         return $this->hasMany(FriendRelation::class, "user_from", "id");
+    }
+
+    /**
+     * Retorna quem está seguindo o Usuário
+     */
+    public function followers() {
+        return $this->hasMany(FriendRelation::class, "user_to", "id");
     }
 }

@@ -28,6 +28,8 @@ Route::post("/login", [AuthController::class, "loginAction"])->name("auth.loginA
 
 
 Route::get("/user/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
+Route::get("/user/{uniqueUrl}/followers", [UserController::class, "showUserFollowers"])->name("user.followers");
+Route::get("/user/{uniqueUrl}/following", [UserController::class, "showUserFollowing"])->name("user.following");
 
 Route::get("/user/config", [UserController::class, "userConfig"])->name("user.config");
 

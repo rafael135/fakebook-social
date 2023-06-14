@@ -1,4 +1,4 @@
-<div class="post lg:w-180 lg:max-w-180 flex flex-col border-solid border border-gray-400">
+<div class="post lg:w-180 lg:max-w-180 flex flex-col border-solid border bg-gray-100 border-gray-400">
     <div class="post-header px-2 py-1 flex border-solid border-b border-gray-300">
         <a class="flex text-base" href="{{route("user.profile", ["uniqueUrl" => $post->user->uniqueUrl])}}">
             <div class="author-img bg-gray-800 rounded-full focus:ring-4 focus:ring-slate-700 dark:focus:ring-gray-600">
