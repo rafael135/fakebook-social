@@ -1,3 +1,4 @@
+import route from "ziggy-js";
 import { FriendRelationRequest } from "../BASE/RequestTypes";
 
 
@@ -11,7 +12,7 @@ async function followProfile(btn: HTMLButtonElement, id: number) {
 
     console.log(userToken);
     
-    let req = await fetch(`/api/user/${id}/follow`, {
+    let req = await fetch(route("api.user.follow", { id: id }), {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
