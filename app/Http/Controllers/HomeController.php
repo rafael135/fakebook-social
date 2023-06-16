@@ -16,9 +16,9 @@ class HomeController extends Controller
 
             $userPosts = $usr->posts;
             
+            $userPosts = PostLikesController::markPostsLikedBy($loggedUser, $usr);
+
             foreach($userPosts as $post) {
-                $postLike = DB::table("posts_likes")->select()->where("post_id", "=", $post->id)->where("user_id", "=", $loggedUser->id)->get()->count();
-                $post["liked"] = ($postLike > 0) ? true : false;
                 $posts->push($post);
             }
         }

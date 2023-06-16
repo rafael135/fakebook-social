@@ -171,10 +171,12 @@ class UserController extends Controller
 
         $isMine = ($profileUser->id == $loggedUser->id) ? true : false;
 
+        $verifiedPosts = PostLikesController::markPostsLikedBy($loggedUser, $profileUser);
+
         $profileUser["is_friend"] = $isFriend;
         $profileUser["is_mine"] = $isMine;
 
-        
+        $profileUser["verified_posts"] = $verifiedPosts;
 
         return view("User.profile", [
             "loggedUser" => $loggedUser,

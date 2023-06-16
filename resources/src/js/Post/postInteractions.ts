@@ -4,17 +4,17 @@ import { PostLikeType, PostType, RequestType } from "../BASE/RequestTypes.js";
 
 let newPostForm = document.getElementById("newPostForm");
 
-newPostForm!.addEventListener("focusin", (e) => {
+newPostForm?.addEventListener("focusin", (e) => {
     newPostForm!.querySelector("span")!.style.display = "none";
 });
 
-newPostForm!.addEventListener("focusout", (e) => {
+newPostForm?.addEventListener("focusout", (e) => {
     if(newPostForm!.innerText == "") {
         newPostForm!.querySelector("span")!.style.display = "flex";
     }
 });
 
-newPostForm!.addEventListener("keydown", (e) => {
+newPostForm?.addEventListener("keydown", (e) => {
     if(e.key === "Backspace") {
         if(newPostForm!.innerText == "") {
             e.preventDefault();
@@ -24,14 +24,14 @@ newPostForm!.addEventListener("keydown", (e) => {
 
 
 async function addNewPost(btn: HTMLElement) {
-    let body = btn.parentElement!.querySelector("a")!.innerText;
-    body = body.replace(`${newPostForm!.querySelector("span")!.innerHTML}`, "");
+    let body = btn.parentElement?.querySelector("a")!.innerText;
+    body = body?.replace(`${newPostForm?.querySelector("span")!.innerHTML}`, "");
 
     if(body == "") {
         return;
     }
 
-    let userTokenInput = newPostForm!.querySelector("input[name='userToken']") as HTMLInputElement;
+    let userTokenInput = document.querySelector("input[name='userToken']") as HTMLInputElement;
     let userToken = userTokenInput.value;
 
     let headers =  new Headers();
@@ -68,12 +68,13 @@ async function addNewPost(btn: HTMLElement) {
 
 
 async function likePost(likeBtn: HTMLSpanElement, postId: number) {
-    let userToken = (newPostForm!.querySelector("input[name='userToken']") as HTMLInputElement).value;
+    let userToken = (document.querySelector("input[name='userToken']") as HTMLInputElement).value;
 
     let headers =  new Headers();
     headers.append("Content-Type", "application/json");
 
-    let req = await fetch(`/api/post/${postId}/like`, {
+    // @ts-expect-error
+    let req = await fetch(route("api.post.like", {id: postId}), {
         method: "POST",
         headers: headers,
         body: JSON.stringify({

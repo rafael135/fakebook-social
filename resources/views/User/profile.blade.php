@@ -31,7 +31,14 @@
         </div>
     </div>
 
+    <div class="profile-posts mt-4 flex w-full flex-col gap-3 items-center">
+        @foreach ($profileUser->verified_posts as $post)
+            <x-post :post="$post" />
+        @endforeach
+    </div>
+
     <script src="{{asset("assets/js/ajax/js/Profile/profileInteractions.js")}}"></script>
+    <script src="{{asset("assets/js/ajax/js/Post/postInteractions.js")}}"></script>
 
 
 

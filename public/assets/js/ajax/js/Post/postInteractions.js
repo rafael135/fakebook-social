@@ -11,15 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 //import Routes from "../BASE/Routes.js";
 let newPostForm = document.getElementById("newPostForm");
-newPostForm.addEventListener("focusin", (e) => {
+newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("focusin", (e) => {
     newPostForm.querySelector("span").style.display = "none";
 });
-newPostForm.addEventListener("focusout", (e) => {
+newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("focusout", (e) => {
     if (newPostForm.innerText == "") {
         newPostForm.querySelector("span").style.display = "flex";
     }
 });
-newPostForm.addEventListener("keydown", (e) => {
+newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") {
         if (newPostForm.innerText == "") {
             e.preventDefault();
@@ -27,13 +27,14 @@ newPostForm.addEventListener("keydown", (e) => {
     }
 });
 function addNewPost(btn) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        let body = btn.parentElement.querySelector("a").innerText;
-        body = body.replace(`${newPostForm.querySelector("span").innerHTML}`, "");
+        let body = (_a = btn.parentElement) === null || _a === void 0 ? void 0 : _a.querySelector("a").innerText;
+        body = body === null || body === void 0 ? void 0 : body.replace(`${newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.querySelector("span").innerHTML}`, "");
         if (body == "") {
             return;
         }
-        let userTokenInput = newPostForm.querySelector("input[name='userToken']");
+        let userTokenInput = document.querySelector("input[name='userToken']");
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
@@ -62,10 +63,11 @@ function addNewPost(btn) {
 }
 function likePost(likeBtn, postId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let userToken = newPostForm.querySelector("input[name='userToken']").value;
+        let userToken = document.querySelector("input[name='userToken']").value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        let req = yield fetch(`/api/post/${postId}/like`, {
+        // @ts-expect-error
+        let req = yield fetch(route("api.post.like", { id: postId }), {
             method: "POST",
             headers: headers,
             body: JSON.stringify({

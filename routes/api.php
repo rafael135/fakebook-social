@@ -28,7 +28,7 @@ Route::get("/user/{id}", [UserController::class, "getUserById"])->withoutMiddlew
 Route::post("/user/{id}/follow", [UserController::class, "followUser"])->withoutMiddleware([Authenticate::class])->name("api.user.follow");
 
 Route::post("/post/new", [PostController::class, "newPost"])->withoutMiddleware(Authenticate::class)->name("api.post.new");
-Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class]);
+Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class])->name("api.post.comments");
 Route::get("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class]);
 
 Route::post("/post/{id}/like", [PostController::class, "likePostById"])->withoutMiddleware([Authenticate::class])->name("api.post.like");

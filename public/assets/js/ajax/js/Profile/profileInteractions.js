@@ -8,11 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const ziggy_js_1 = __importDefault(require("ziggy-js"));
 function followProfile(btn, id) {
     return __awaiter(this, void 0, void 0, function* () {
         //let follow = !(btn.getAttribute("data-following")!.toString() == "true") ? true : false;
@@ -20,7 +16,8 @@ function followProfile(btn, id) {
         headers.append("Content-Type", "application/json");
         let userToken = document.querySelector("input[name='userToken']").value;
         console.log(userToken);
-        let req = yield fetch((0, ziggy_js_1.default)("api.user.follow", { id: id }), {
+        // @ts-expect-error
+        let req = yield fetch(route("api.user.follow", { id: id }), {
             method: "POST",
             headers: headers,
             body: JSON.stringify({

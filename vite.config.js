@@ -8,9 +8,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    resolve: {
-        alias: {
-            ziggy: "vendor/tightenco/ziggy/dist"
-        }
-    },
 });
