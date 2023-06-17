@@ -26,12 +26,11 @@ Route::get("/login", [AuthController::class, "loginPage"])->name("auth.login");
 Route::post("/register", [AuthController::class, "registerAction"])->name("auth.registerAction");
 Route::post("/login", [AuthController::class, "loginAction"])->name("auth.loginAction");
 
+Route::get("/user/config", [UserController::class, "userConfig"])->name("user.config");
 
 Route::get("/user/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
 Route::get("/user/{uniqueUrl}/followers", [UserController::class, "showUserFollowers"])->name("user.followers");
 Route::get("/user/{uniqueUrl}/following", [UserController::class, "showUserFollowing"])->name("user.following");
-
-Route::get("/user/config", [UserController::class, "userConfig"])->name("user.config");
 
 Route::get("/user/friends", [FriendRelationsController::class, "showFriends"])->name("user.friends");
 Route::get("/user/messages", [MessageController::class, "showMessages"])->name("user.messages");

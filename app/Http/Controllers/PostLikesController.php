@@ -15,7 +15,7 @@ class PostLikesController extends Controller
     public static function markPostsLikedBy(User $user, User $targetUser) {
         $targetPosts = $targetUser->posts;
 
-        $VerifiedPosts = collect();
+        $verifiedPosts = collect();
 
         foreach($targetPosts as $post) {
             if(DB::table("posts_likes")->select(["id"])->where("post_id", "=", $post->id)->where("user_id", "=", $user->id)->count() > 0) {
@@ -24,9 +24,9 @@ class PostLikesController extends Controller
                 $post["liked"] = false;
             }
 
-            $VerifiedPosts->push($post);
+            $verifiedPosts->add($post);
         }
 
-        return $VerifiedPosts;
+        return $verifiedPosts;
     }
 }

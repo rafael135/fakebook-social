@@ -7,11 +7,12 @@ use App\Models\PostLike;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-    public function getPostById(Request $request) :JsonResponse {
+    public function getPostById(Request $request) : JsonResponse {
         $id = $request->route()->parameter("id", null);
 
         if($id == null) {
@@ -120,7 +121,7 @@ class PostController extends Controller
     }
 
 
-    function newPost(Request $request) {
+    function newPost(Request $request) : JsonResponse {
         $userToken = $request->input("userToken", false);
         $body = $request->input("body", false);
 
@@ -133,6 +134,13 @@ class PostController extends Controller
         }
 
         $rawData = DB::table("users")->select(["id"])->where("remember_token", "=", $userToken)->get();
+
+        if($rawData->first() == null) {
+            return response()->json([
+                "response" => "Não autorizado",
+                "status" => 403
+            ], 403);
+        }
 
         $userId = $rawData->first()->id;
 
@@ -155,5 +163,61 @@ class PostController extends Controller
             ],
             "status" => 201
         ], 201);
+    }
+
+    public function deletePost(Request $request) : JsonResponse {
+        $userToken = $request->input("userToken", false);
+        $id = $request->route()->parameter("id", false);
+
+        if($userToken == false || $id == false) {
+            return response()->json([
+                "response" => "Não autorizado",
+                "status" => 403
+            ], 403);
+        }
+
+        $rawUser = DB::table("users")->select(["id"])->where("remember_token", "=", $userToken)->get();
+
+        if($rawUser->first() != null) {
+            $post = Post::find($id);
+            $post->delete();
+
+            return response()->json([
+                "response" => true,
+                "status" => 200
+            ], 200);
+        }
+
+        return response()->json([
+            "response" => "Não autorizado",
+            "status" => 403
+        ], 403);
+    }
+
+
+
+
+    /**
+     * Marca se os posts informados sao do usuario
+     */
+    public static function markMinePosts(User $targetUser, Collection $posts) {
+        $verifiedPosts = collect();
+
+        //$values = [];
+
+        foreach($posts as $post) {
+            if($post->user_id == $targetUser->id) {
+                $post["is_mine"] = true;
+                //$values[] = [ "result" => true, "userId" => $post->user->name ];
+            } else {
+                $post["is_mine"] = false;
+                //$values[] = [ "result" => false, "userId" => $post->user->name ];
+            }
+
+            $verifiedPosts->add($post);
+        }
+
+        //dd($values);
+        return $verifiedPosts;
     }
 }

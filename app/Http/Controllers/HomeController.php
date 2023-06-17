@@ -46,6 +46,8 @@ class HomeController extends Controller
             $feedPosts->add($userPost);
         }
 
+        $feedPosts = PostController::markMinePosts($loggedUser, $feedPosts);
+
         $feedPosts = $feedPosts->sortBy(function($post, int $key) {
             
             return -$post->updated_at->toArray()["timestamp"];

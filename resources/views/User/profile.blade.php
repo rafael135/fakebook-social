@@ -24,7 +24,7 @@
                 @endif
 
                 <div class="user-info--follow-count text-xl flex flex-col items-end ms-auto me-8">
-                    <span>Seguidores: <a href="{{route("user.followers", ["uniqueUrl" => $profileUser->uniqueUrl])}}" class="text-blue-500">{{$profileUser->followers()->count()}}</a></span>
+                    <span id="user-info--follow-count--followers">Seguidores: <a href="{{route("user.followers", ["uniqueUrl" => $profileUser->uniqueUrl])}}" class="text-blue-500">{{$profileUser->followers()->count()}}</a></span>
                     <span>Seguindo: <a href="{{route("user.following", ["uniqueUrl" => $profileUser->uniqueUrl])}}" class="text-blue-500">{{$profileUser->following()->count()}}</a></span>
                 </div>
             </div>
@@ -37,8 +37,8 @@
         @endforeach
     </div>
 
-    <script src="{{asset("assets/js/ajax/js/Profile/profileInteractions.js")}}"></script>
-    <script src="{{asset("assets/js/ajax/js/Post/postInteractions.js")}}"></script>
+    <script src="{{asset("assets/js/Profile/profileInteractions.js")}}"></script>
+    <script src="{{asset("assets/js/Post/postInteractions.js")}}"></script>
 
 
 

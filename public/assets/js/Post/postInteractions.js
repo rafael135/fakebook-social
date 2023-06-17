@@ -38,7 +38,8 @@ function addNewPost(btn) {
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        let req = yield fetch("/api/post/new", {
+        // @ts-expect-error
+        let req = yield fetch(route("api.post.new"), {
             method: "POST",
             headers: headers,
             body: JSON.stringify({

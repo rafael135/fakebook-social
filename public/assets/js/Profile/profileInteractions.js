@@ -28,11 +28,15 @@ function followProfile(btn, id) {
         if (res.status >= 400 && res.status <= 420) {
             return;
         }
+        let countFollowersSpan = document.getElementById("user-info--follow-count--followers");
+        let countFollowersLink = countFollowersSpan === null || countFollowersSpan === void 0 ? void 0 : countFollowersSpan.querySelector("a");
         if (res.status == 201) { // Resposta de status 201: Foi criado uma relação, então o usuário está sendo seguido
+            countFollowersLink.innerText = `${parseInt(countFollowersLink.innerText) + 1}`;
             btn.setAttribute("data-following", "true");
             btn.innerText = "Seguindo";
         }
         else { // Resposta de status 200: Foi excluído a relação, então o usuário não é mais seguido
+            countFollowersLink.innerText = `${parseInt(countFollowersLink.innerText) - 1}`;
             btn.setAttribute("data-following", "false");
             btn.innerText = "Seguir";
         }

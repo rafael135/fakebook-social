@@ -22,7 +22,7 @@
         
     </div>
 
-    <script src="{{asset("assets/js/ajax/js/Post/postInteractions.js")}}"></script>
+    <script src="{{asset("assets/js/Post/postInteractions.js")}}"></script>
 
     
 

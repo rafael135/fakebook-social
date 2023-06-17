@@ -37,7 +37,8 @@ async function addNewPost(btn: HTMLElement) {
     let headers =  new Headers();
     headers.append("Content-Type", "application/json");
 
-    let req = await fetch("/api/post/new", {
+    // @ts-expect-error
+    let req = await fetch(route("api.post.new"), {
         method: "POST",
         headers: headers,
         body: JSON.stringify({

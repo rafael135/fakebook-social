@@ -26,10 +26,17 @@ async function followProfile(btn: HTMLButtonElement, id: number) {
         return;
     }
 
+    let countFollowersSpan : HTMLSpanElement = document.getElementById("user-info--follow-count--followers") as HTMLSpanElement;
+    let countFollowersLink : HTMLAnchorElement = countFollowersSpan?.querySelector("a") as HTMLAnchorElement;
+
     if(res.status == 201) { // Resposta de status 201: Foi criado uma relação, então o usuário está sendo seguido
+        countFollowersLink!.innerText = `${parseInt(countFollowersLink!.innerText) + 1}`;
+
         btn.setAttribute("data-following", "true");
         btn.innerText = "Seguindo";
     } else { // Resposta de status 200: Foi excluído a relação, então o usuário não é mais seguido
+        countFollowersLink!.innerText = `${parseInt(countFollowersLink!.innerText) - 1}`;
+
         btn.setAttribute("data-following", "false");
         btn.innerText = "Seguir";
     }
