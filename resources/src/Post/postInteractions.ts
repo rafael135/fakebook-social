@@ -1,6 +1,7 @@
 import { PostLikeType, PostType, RequestType } from "../BASE/RequestTypes.js";
 //import Routes from "../BASE/Routes.js";
 
+let userTokenInput = document.querySelector("input[name='userToken']") as HTMLInputElement;
 
 let newPostForm = document.getElementById("newPostForm");
 
@@ -31,7 +32,6 @@ async function addNewPost(btn: HTMLElement) {
         return;
     }
 
-    let userTokenInput = document.querySelector("input[name='userToken']") as HTMLInputElement;
     let userToken = userTokenInput.value;
 
     let headers =  new Headers();
@@ -67,9 +67,37 @@ async function addNewPost(btn: HTMLElement) {
 }
 
 
+async function deletePost(postReference: HTMLSpanElement, postId: number) {
+    let userToken = userTokenInput.value;
+
+    let headers =  new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // @ts-expect-error
+    let req = await fetch(route("api.post.delete", { id: postId }), {
+        method: "DELETE",
+        headers: headers,
+        body: JSON.stringify({
+            userToken: userToken
+        })
+    });
+
+    let res: RequestType = await req.json();
+
+    if(res.status == 200) {
+        let post = postReference.parentElement?.parentElement!.parentElement!.parentElement!.parentElement;
+
+        post?.remove();
+    } else {
+
+    }
+
+}
+
+
 
 async function likePost(likeBtn: HTMLSpanElement, postId: number) {
-    let userToken = (document.querySelector("input[name='userToken']") as HTMLInputElement).value;
+    let userToken = userTokenInput.value;
 
     let headers =  new Headers();
     headers.append("Content-Type", "application/json");
@@ -103,5 +131,5 @@ function openComments(id: number) {
 }
 
 function sharePost(id: number) {
-
+    
 }

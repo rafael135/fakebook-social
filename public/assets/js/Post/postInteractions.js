@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 //import Routes from "../BASE/Routes.js";
+let userTokenInput = document.querySelector("input[name='userToken']");
 let newPostForm = document.getElementById("newPostForm");
 newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("focusin", (e) => {
     newPostForm.querySelector("span").style.display = "none";
@@ -34,7 +35,6 @@ function addNewPost(btn) {
         if (body == "") {
             return;
         }
-        let userTokenInput = document.querySelector("input[name='userToken']");
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
@@ -62,9 +62,32 @@ function addNewPost(btn) {
         }
     });
 }
+function deletePost(postReference, postId) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        let userToken = userTokenInput.value;
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        // @ts-expect-error
+        let req = yield fetch(route("api.post.delete", { id: postId }), {
+            method: "DELETE",
+            headers: headers,
+            body: JSON.stringify({
+                userToken: userToken
+            })
+        });
+        let res = yield req.json();
+        if (res.status == 200) {
+            let post = (_a = postReference.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement.parentElement.parentElement.parentElement;
+            post === null || post === void 0 ? void 0 : post.remove();
+        }
+        else {
+        }
+    });
+}
 function likePost(likeBtn, postId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let userToken = document.querySelector("input[name='userToken']").value;
+        let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
         // @ts-expect-error

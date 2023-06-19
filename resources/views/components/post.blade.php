@@ -2,7 +2,7 @@
     <div class="post-header px-2 py-1 flex border-solid border-b border-gray-300">
         <a class="flex text-base" href="{{route("user.profile", ["uniqueUrl" => $post->user->uniqueUrl])}}">
             <div class="author-img bg-gray-800 rounded-full focus:ring-4 focus:ring-slate-700 dark:focus:ring-gray-600">
-                <img class="w-12 h-12 max-w-none rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                <img class="w-12 h-12 max-w-none rounded-full" src="@if($post->avatar_url != null) {{$post->avatar_url}} @else https://flowbite.com/docs/images/people/profile-picture-5.jpg @endif" alt="user photo">
             </div>
             <div class="author-info ms-1 flex flex-col">
                 <div class="author--name">{{$post->user->name}}</div>
@@ -43,9 +43,9 @@
 
                 @if($post->is_mine == true)
                     <div class="py-2">
-                        <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                        <span class="block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" onclick="deletePost(this, {{$post->id}})">
                             Excluir
-                        </a>
+                        </span>
                     </div>
                 @endif
             </div>

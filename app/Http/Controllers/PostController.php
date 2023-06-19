@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -219,5 +220,22 @@ class PostController extends Controller
 
         //dd($values);
         return $verifiedPosts;
+    }
+
+    public static function getAuthorAvatar(Collection $targetPosts) {
+        $userFiles = "users/";
+        $posts = collect();
+
+        foreach($targetPosts as $post) {
+            if($post->user->avatar != null) {
+                $post["avatar_url"] = Storage::url("public/" . $userFiles . $post->user_id . "/" . $post->user->avatar);
+            } else {
+                $post["avatar_url"] = null;
+            }
+
+            $posts->push($post);
+        }
+
+        return $posts;
     }
 }

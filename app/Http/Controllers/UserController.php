@@ -10,10 +10,18 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Hamcrest\Type\IsString;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    private $usersFiles = "users/";
+
+    public function __construct()
+    {
+        
+    }
 
 # Métodos para rotas de API:
     public function getUserById(Request $request) : JsonResponse {
@@ -158,6 +166,14 @@ class UserController extends Controller
 
         $profileUser = User::find($userId);
 
+        if($profileUser->avatar != null) {
+            $profileUser["avatar_url"] = Storage::url($this->usersFiles . $profileUser->id . "/" . $profileUser->avatar);
+        }
+
+        if($profileUser->cover != null) {
+            $profileUser["cover_url"] = Storage::url($this->usersFiles . $profileUser->id . "/" . $profileUser->cover);
+        }
+
         $friendRelations = FriendRelationsController::getFollowing($loggedUser);
 
         $isFriend = false;
@@ -171,7 +187,15 @@ class UserController extends Controller
 
         $isMine = ($profileUser->id == $loggedUser->id) ? true : false;
 
+        
+
         $verifiedPosts = PostLikesController::markPostsLikedBy($loggedUser, $profileUser);
+
+        if($isMine == true) {
+            $verifiedPosts = PostController::markMinePosts($loggedUser, $verifiedPosts);
+        }
+
+        $verifiedPosts = PostController::getAuthorAvatar($verifiedPosts);
 
         $profileUser["is_friend"] = $isFriend;
         $profileUser["is_mine"] = $isMine;
@@ -213,5 +237,99 @@ class UserController extends Controller
             "loggedUser" => $loggedUser,
             "optionPage" => $opt
         ]);
+    }
+
+    
+
+    public function changeAvatar(Request $request) {
+        $loggedUser = AuthController::checkLogin();
+
+        $loggedUser = User::find(2);
+
+        $avatarFile = $request->file("avatar", false);
+        $userId = $request->input("id", false);
+
+        if($avatarFile == false || $userId == false) {
+            return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Erro ao tentar fazer upload da imagem");
+        }
+
+        $acceptedTypes = ["image/jpg", "image/jpeg", "image/png"];
+
+        if(array_search($avatarFile->getMimeType(), $acceptedTypes) == false) {
+            //return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Tipo de arquivo não permitido.");
+            echo("arquivo nao permitido");
+            exit;
+        }
+
+        $defaultPath = $this->usersFiles . $loggedUser->id;
+        $avatarFileName = "avatar." . $avatarFile->clientExtension();
+
+        if($loggedUser->avatar != null) {
+            Storage::disk("public")->delete($defaultPath . "/" . $loggedUser->avatar);
+        }
+
+        Storage::disk("public")->makeDirectory($defaultPath);
+
+        $path = Storage::putFileAs(
+            "public/" . $defaultPath, $avatarFile, $avatarFileName
+        );
+
+        $loggedUser->avatar = $avatarFileName;
+        $loggedUser->save();
+
+        // Excluo o arquivo temporario
+        unlink($avatarFile->getRealPath());
+        
+
+        dd($path);
+
+        //dd($avatarFile->store($this->usersFiles . $loggedUser->id . "/avatar."));
+
+        //dd($avatarFile);
+
+        return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("success", "Imagem de perfil alterado com sucesso!");
+    }
+
+    public function changeCover(Request $request) {
+        $loggedUser = AuthController::checkLogin();
+
+        $loggedUser = User::find(2);
+
+        $coverFile = $request->file("cover", false);
+        $userId = $request->input("id", false);
+
+        if($coverFile == false || $userId == false) {
+            return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Erro ao tentar fazer upload da imagem");
+        }
+
+        $acceptedTypes = ["image/jpg", "image/jpeg", "image/png"];
+
+        if(array_search($coverFile->getMimeType(), $acceptedTypes) == false) {
+            //return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Tipo de arquivo não permitido.");
+            echo("arquivo nao permitido");
+            exit;
+        }
+
+        $defaultPath = $this->usersFiles . $loggedUser->id;
+        $coverFileName = "cover." . $coverFile->clientExtension();
+
+
+        if($loggedUser->cover != null) {
+            Storage::disk("public")->delete($defaultPath . "/" . $loggedUser->cover);
+        }
+
+        Storage::disk("public")->makeDirectory($defaultPath);
+
+        $path = Storage::putFileAs(
+            "public/" . $defaultPath, $coverFile, $coverFileName
+        );
+
+        $loggedUser->cover = $coverFileName;
+        $loggedUser->save();
+
+        // Excluo o arquivo temporario
+        unlink($coverFile->getRealPath());
+
+        //return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("success", "Capa alterada com sucesso!");
     }
 }

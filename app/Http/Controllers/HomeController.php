@@ -47,6 +47,7 @@ class HomeController extends Controller
         }
 
         $feedPosts = PostController::markMinePosts($loggedUser, $feedPosts);
+        $feedPosts = PostController::getAuthorAvatar($feedPosts);
 
         $feedPosts = $feedPosts->sortBy(function($post, int $key) {
             

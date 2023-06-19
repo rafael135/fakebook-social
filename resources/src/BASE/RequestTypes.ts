@@ -1,5 +1,5 @@
 export type RequestType = {
-    response: object | string,
+    response: object | string | boolean,
     status: number
 }
 

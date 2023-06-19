@@ -33,7 +33,7 @@
                             aria-expanded="false" data-dropdown-toggle="dropdown-user">
                             <span class="sr-only">Open user menu</span>
                             <img class="w-8 h-8 rounded-full"
-                                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                                src="@if($loggedUser->avatar != null) {{$loggedUser->avatar_url}} @else https://flowbite.com/docs/images/people/profile-picture-5.jpg @endif" alt="user photo">
                         </button>
                     </div>
                     <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-900 bg-gradient-to-r from-slate-800 from-70% to-slate-900 rounded shadow dark:bg-gray-700 dark:divide-gray-600"

@@ -11,12 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
-
-
     public function loginPage(Request $request) : View | RedirectResponse {
         if(self::checkLogin() != false) {
             return redirect()->route("home");
@@ -33,7 +32,17 @@ class AuthController extends Controller
 
     public static function checkLogin() : User | false {
         if(Auth::check() == true) {
+            $userFiles = "users/";
             $user = User::find(Auth::getUser()->getAuthIdentifier());
+
+            if($user->avatar != null) {
+                $user["avatar_url"] = Storage::url("public/" . $userFiles . $user->id . "/" . $user->avatar);
+            }
+
+            if($user->cover != null) {
+                $user["cover_url"] = Storage::url("public/".  $userFiles. $user->id. "/". $user->cover);
+            }
+
             return $user;
         }
 
