@@ -43,7 +43,7 @@
 
                 @if($post->is_mine == true)
                     <div class="py-2">
-                        <span class="block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" onclick="deletePost(this, {{$post->id}})">
+                        <span data-modal-target="deletePost-modal" data-modal-toggle="deletePost-modal" class="block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" onclick="setPostToDelete(this, {{$post->id}})">
                             Excluir
                         </span>
                     </div>

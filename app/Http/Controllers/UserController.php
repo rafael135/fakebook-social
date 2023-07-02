@@ -11,6 +11,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Hamcrest\Type\IsString;
 use Illuminate\Contracts\Cache\Store;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -244,21 +245,21 @@ class UserController extends Controller
     public function changeAvatar(Request $request) {
         $loggedUser = AuthController::checkLogin();
 
-        $loggedUser = User::find(2);
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
+        $loggedUser = User::find($loggedUser->id);
 
         $avatarFile = $request->file("avatar", false);
-        $userId = $request->input("id", false);
 
-        if($avatarFile == false || $userId == false) {
+        if($avatarFile == false) {
             return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Erro ao tentar fazer upload da imagem");
         }
 
         $acceptedTypes = ["image/jpg", "image/jpeg", "image/png"];
 
         if(array_search($avatarFile->getMimeType(), $acceptedTypes) == false) {
-            //return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Tipo de arquivo não permitido.");
-            echo("arquivo nao permitido");
-            exit;
+            return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Tipo de arquivo não permitido.");
         }
 
         $defaultPath = $this->usersFiles . $loggedUser->id;
@@ -280,9 +281,6 @@ class UserController extends Controller
         // Excluo o arquivo temporario
         unlink($avatarFile->getRealPath());
         
-
-        dd($path);
-
         //dd($avatarFile->store($this->usersFiles . $loggedUser->id . "/avatar."));
 
         //dd($avatarFile);
@@ -293,21 +291,21 @@ class UserController extends Controller
     public function changeCover(Request $request) {
         $loggedUser = AuthController::checkLogin();
 
-        $loggedUser = User::find(2);
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
+        $loggedUser = User::find($loggedUser->id);
 
         $coverFile = $request->file("cover", false);
-        $userId = $request->input("id", false);
 
-        if($coverFile == false || $userId == false) {
+        if($coverFile == false) {
             return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Erro ao tentar fazer upload da imagem");
         }
 
         $acceptedTypes = ["image/jpg", "image/jpeg", "image/png"];
 
         if(array_search($coverFile->getMimeType(), $acceptedTypes) == false) {
-            //return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Tipo de arquivo não permitido.");
-            echo("arquivo nao permitido");
-            exit;
+            return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("error", "Tipo de arquivo não permitido.");
         }
 
         $defaultPath = $this->usersFiles . $loggedUser->id;
@@ -330,6 +328,21 @@ class UserController extends Controller
         // Excluo o arquivo temporario
         unlink($coverFile->getRealPath());
 
-        //return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("success", "Capa alterada com sucesso!");
+        return redirect()->route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])->with("success", "Capa alterada com sucesso!");
+    }
+
+
+    public static function checkUser(User $targetUser) : User {
+        $userFiles = "users/";
+
+        if($targetUser->avatar != null) {
+            $targetUser["avatar_url"] = Storage::url("public/" . $userFiles . $targetUser->id . "/" . $targetUser->avatar);
+        }
+
+        if($targetUser->cover != null) {
+            $targetUser["cover_url"] = Storage::url("public/" . $userFiles . $targetUser->id . "/" . $targetUser->cover);
+        }
+
+        return $targetUser;
     }
 }

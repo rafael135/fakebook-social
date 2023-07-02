@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Comment;
+use App\Models\FriendRelation;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -18,8 +19,9 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::factory(10)->create();
-        Post::factory(40)->create();
+        User::factory(100)->create();
+        FriendRelation::factory(150)->create();
+        Post::factory(600)->create();
         Comment::factory(80)->create();
 
         // \App\Models\User::factory()->create([

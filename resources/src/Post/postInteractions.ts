@@ -1,7 +1,7 @@
 import { PostLikeType, PostType, RequestType } from "../BASE/RequestTypes.js";
 //import Routes from "../BASE/Routes.js";
 
-let userTokenInput = document.querySelector("input[name='userToken']") as HTMLInputElement;
+let userTokenInput = document.getElementById("userToken") as HTMLInputElement;
 
 let newPostForm = document.getElementById("newPostForm");
 
@@ -22,6 +22,10 @@ newPostForm?.addEventListener("keydown", (e) => {
         }
     }
 });
+
+
+let postInteractingId: number;
+let postInteractingReference: HTMLSpanElement;
 
 
 async function addNewPost(btn: HTMLElement) {
@@ -66,9 +70,21 @@ async function addNewPost(btn: HTMLElement) {
     
 }
 
+function setPostToDelete(postReference: HTMLSpanElement, postId: number) {
+    postInteractingId = postId
+    postInteractingReference = postReference;
+}
 
-async function deletePost(postReference: HTMLSpanElement, postId: number) {
+
+async function deletePost() {
     let userToken = userTokenInput.value;
+
+    let postId = postInteractingId;
+    let postReference = postInteractingReference;
+
+    if(Number.isInteger(postId) == false || postReference instanceof HTMLSpanElement == false) {
+        return;
+    }
 
     let headers =  new Headers();
     headers.append("Content-Type", "application/json");

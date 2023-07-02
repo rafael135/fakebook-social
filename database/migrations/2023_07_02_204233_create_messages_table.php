@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,16 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
-            $table->string("type", 40);
-            $table->boolean("private")->default(false);
+            $table->foreignIdFor(Chat::class, "chat_id");
+            $table->foreignIdFor(User::class, "user_from");
+            $table->foreignIdFor(User::class, "user_to");
             $table->text("body");
-            $table->integer("like_count")->default(0);
-            $table->integer("comment_count")->default(0);
-
-            $table->softDeletesDatetime();
             $table->timestamps();
         });
     }
@@ -30,7 +27,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {   
-        Schema::dropIfExists('posts');
+    {
+        Schema::dropIfExists('messages');
     }
 };

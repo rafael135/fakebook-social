@@ -40,8 +40,26 @@ async function followProfile(btn: HTMLButtonElement, id: number) {
         btn.setAttribute("data-following", "false");
         btn.innerText = "Seguir";
     }
+}
 
+function changeAvatar(imageInput: HTMLInputElement) {
+    let form = document.getElementById("form-avatarImage") as HTMLFormElement;
 
+    if(imageInput?.files!.length.valueOf() > 0) {
+        form?.submit();
+        return;
+    }
 
+    alert("Nenhum arquivo selecionado!");
+}
 
+function changeCover(imageInput: HTMLInputElement) {
+    let form = document.getElementById("form-coverImage") as HTMLFormElement;
+
+    if(imageInput?.files!.length.valueOf() > 0) {
+        form?.submit();
+        return;
+    }
+
+    alert("Nenhum arquivo selecionado!");
 }

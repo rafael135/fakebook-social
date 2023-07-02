@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 //import Routes from "../BASE/Routes.js";
-let userTokenInput = document.querySelector("input[name='userToken']");
+let userTokenInput = document.getElementById("userToken");
 let newPostForm = document.getElementById("newPostForm");
 newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("focusin", (e) => {
     newPostForm.querySelector("span").style.display = "none";
@@ -27,6 +27,8 @@ newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventLi
         }
     }
 });
+let postInteractingId;
+let postInteractingReference;
 function addNewPost(btn) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -62,10 +64,19 @@ function addNewPost(btn) {
         }
     });
 }
-function deletePost(postReference, postId) {
+function setPostToDelete(postReference, postId) {
+    postInteractingId = postId;
+    postInteractingReference = postReference;
+}
+function deletePost() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         let userToken = userTokenInput.value;
+        let postId = postInteractingId;
+        let postReference = postInteractingReference;
+        if (Number.isInteger(postId) == false || postReference instanceof HTMLSpanElement == false) {
+            return;
+        }
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
         // @ts-expect-error

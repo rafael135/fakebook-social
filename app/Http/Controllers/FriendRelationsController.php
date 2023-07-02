@@ -3,36 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\FriendRelation;
-use App\Models\Post;
 use App\Models\User;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class FriendRelationsController extends Controller
-{
-    public static function getFollowing(User $user) {
-        $friendRelations = $user->following()->get();
+{   
+    /**
+     * Pega todos os id's dos usuários que são seguidos pelo usuário específicado
+     */
+    public static function getFollowing(User $targetUser) : Collection {
+        $friendRelations = $targetUser->following()->get();
 
         $friendRelations = $friendRelations->toArray();
 
-        $following = []; 
+        $following = collect(); 
 
         foreach($friendRelations as $friend) {
-            $following[] = $friend["user_to"];
+            $following->push($friend["user_to"]);
         }
 
         return $following;
     }
 
-    public static function getFollowers(User $user) {
-        $friendRelations = $user->followers()->get();
+    /**
+     * Pega todos os id's dos usuários que seguem o usuário específicado
+     */
+    public static function getFollowers(User $targetUser) : Collection {
+        $friendRelations = $targetUser->followers()->get();
 
         $friendRelations = $friendRelations->toArray();
 
-        $followers = [];
+        $followers = collect();
 
         foreach($friendRelations as $friend) {
-            $followers[] = $friend["user_from"];
+            $followers->push($friend["user_from"]);
         }
 
         return $followers;
@@ -56,5 +64,35 @@ class FriendRelationsController extends Controller
         }
 
         return false;
+    }
+
+
+
+    public function showFriends(Request $request) : View | RedirectResponse {
+        $loggedUser = AuthController::checkLogin();
+
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
+
+        $following = self::getFollowing($loggedUser);
+
+        //dd($following);
+
+        $friends = collect();
+
+        foreach($following as $friend) {
+            $user = User::find($friend);
+
+            $friends->add(UserController::checkUser($user));
+        }
+
+        
+        //dd($friends);
+
+        return view("friends", [
+            "loggedUser" => $loggedUser,
+            "friends" => $friends
+        ]);
     }
 }

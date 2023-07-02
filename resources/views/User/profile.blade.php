@@ -7,7 +7,7 @@
 
     <div class="user-main relative w-full">
         <div class="user-main-cover bg-slate-900 relative aspect-16/9 h-auto w-full">
-            <img src="@if($profileUser->cover != null) {{$profileUser->cover_url}} @else  @endif" alt="">
+            <img class="w-full h-auto aspect-16/9" src="@if($profileUser->cover != null) {{$profileUser->cover_url}} @else  @endif" alt="">
             @if($profileUser->is_mine == true)
                 <div data-modal-target="changeCover-modal" data-modal-toggle="changeCover-modal" class="group absolute top-0 bottom-0 left-0 right-0 flex justify-center bg-transparent items-center text-slate-700 transition-all duration-200 ease-in-out hover:bg-gray-500 hover:opacity-60 hover:cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" class="hidden w-48 h-48 group-hover:block group-hover:text-slate-800" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
@@ -63,8 +63,20 @@
                     </button>
                     <div class="px-6 py-6 lg:px-8">
                         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Escolha sua imagem de fundo</h3>
-                        <form class="space-y-6" action="#">
-                            
+                        <form class="space-y-6" method="POST" enctype="multipart/form-data" id="form-coverImage" action="{{route("user.change.cover")}}">
+                            @csrf
+
+                            <!-- Input cover -->
+                            <div class="flex items-center justify-center w-full">
+                                <label for="coverInput" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Clique para fazer upload</span> ou arraste o arquivo</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG ou JPEG (MÁX. 2MB)</p>
+                                    </div>
+                                    <input id="coverInput" name="cover" type="file" accept="image/png,image/jpeg" onchange="changeCover(this)" class="hidden" />
+                                </label>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -83,8 +95,20 @@
                     </button>
                     <div class="px-6 py-6 lg:px-8">
                         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Escolha sua foto de perfil</h3>
-                        <form class="space-y-6" action="#">
-                            
+                        <form class="space-y-6" method="POST" enctype="multipart/form-data" id="form-avatarImage" action="{{route("user.change.avatar")}}">
+                            @csrf
+
+                            <!-- Input avatar -->
+                            <div class="flex items-center justify-center w-full">
+                                <label for="avatarInput" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Clique para fazer upload</span> ou arraste o arquivo</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG ou JPEG (MÁX. 2MB)</p>
+                                    </div>
+                                    <input id="avatarInput" name="avatar" type="file" accept="image/png,image/jpeg" onchange="changeAvatar(this)" class="hidden" />
+                                </label>
+                            </div>
                         </form>
                     </div>
                 </div>

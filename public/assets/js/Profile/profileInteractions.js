@@ -42,3 +42,19 @@ function followProfile(btn, id) {
         }
     });
 }
+function changeAvatar(imageInput) {
+    let form = document.getElementById("form-avatarImage");
+    if ((imageInput === null || imageInput === void 0 ? void 0 : imageInput.files.length.valueOf()) > 0) {
+        form === null || form === void 0 ? void 0 : form.submit();
+        return;
+    }
+    alert("Nenhum arquivo selecionado!");
+}
+function changeCover(imageInput) {
+    let form = document.getElementById("form-coverImage");
+    if ((imageInput === null || imageInput === void 0 ? void 0 : imageInput.files.length.valueOf()) > 0) {
+        form === null || form === void 0 ? void 0 : form.submit();
+        return;
+    }
+    alert("Nenhum arquivo selecionado!");
+}

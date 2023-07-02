@@ -73,7 +73,7 @@ class PostController extends Controller
 
         if($id == false || $userToken == false) {
             return response()->json([
-                "response" => "Parameter or body field not found",
+                "response" => "Parâmetro ou corpo da requisição não encontrado!",
                 "status" => 400
             ], 400);
         }
