@@ -1,0 +1,105 @@
+@layer components {
+    .openedPost-author {
+        @apply flex justify-start border border-solid border-gray-300 py-2 px-2;
+    }
+    .openedPost-author .author--img {
+        @apply flex justify-center items-center rounded-full overflow-hidden;
+    }
+    .openedPost-author .author--img img {
+        @apply w-16 h-16 max-w-none;
+    }
+
+
+    .openedPost-author .author-info {
+        @apply flex flex-col ps-1;
+    }
+    .openedPost-author .author-info .author--name {
+        @apply text-lg font-bold mt-0.5;
+    }
+    .openedPost-author .author-info .author--createdAt {
+        @apply text-sm mt-auto mb-2;
+    }
+
+
+
+
+    .openedPost-body {
+        @apply px-2 border border-solid border-gray-300;
+    }
+    .openedPost-body .post--text {
+        @apply p-2 my-2 rounded-lg text-gray-800 bg-gray-200;
+    }
+
+
+
+
+    .openedPost-comments {
+        @apply flex flex-col justify-start px-2 py-4 border-solid border-b border-gray-300 overflow-y-scroll;
+    }
+    .openedPost-comments .post--comment {
+        @apply relative max-w-max flex bg-slate-200 p-2 rounded-lg;
+    }
+    .post--comment .comment--avatar {
+        @apply w-12 h-12 rounded-full overflow-hidden;
+    }
+    .post--comment .comment--avatar img {
+        @apply w-full h-auto max-w-full;
+    }
+    .post--comment .comment--details {
+        @apply flex flex-col;
+    }
+    .post--comment .comment--details .comment--author {
+        @apply font-bold text-base ms-1;
+    }
+    .post--comment .comment--details .comment--body {
+        @apply text-sm ms-1 max-w-128;
+    }
+    .post--comment .comment--likes {
+        @apply absolute cursor-pointer -bottom-2.5 right-16 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5;
+    }
+    .post--comment .comment--reply {
+        @apply absolute cursor-pointer -bottom-2.5 -right-4 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5 hover:underline;
+    }
+
+
+
+
+    .openedPost-details {
+        @apply flex py-2 px-2;
+    }
+    .openedPost-details .post--action {
+        @apply flex-1 flex justify-center items-center;
+    }
+    .openedPost-details .post--action .like-btn {
+        @apply font-semibold flex justify-center items-center text-gray-700 text-lg cursor-pointer hover:text-blue-600 active:text-blue-700;
+    }
+    .openedPost-details .post--action .like-btn.liked {
+        @apply text-blue-600;
+    }
+    .openedPost-details .post--action .chat-btn {
+        @apply font-semibold flex justify-center items-center text-gray-700 text-lg cursor-pointer hover:text-blue-600 active:text-blue-700;
+    }
+    .openedPost-details .post--action .share-btn {
+        @apply font-semibold flex justify-center items-center text-gray-700 text-lg cursor-pointer hover:text-blue-600 active:text-blue-700;
+    }
+
+
+
+
+
+    .openedPost-author .author--img.loading {
+        @apply rounded-xl bg-gray-400 text-gray-400 animate-pulse;
+    }
+    .openedPost-author .author-info.loading {
+        @apply rounded-xl bg-gray-400 text-gray-400 animate-pulse;
+    }
+    .openedPost-body .post--text.loading {
+        @apply rounded-xl bg-gray-400 text-gray-400 animate-pulse;
+    }
+    .openedPost-author .author-info .author--name.loading {
+        @apply rounded-xl bg-gray-400 text-gray-400 animate-pulse;
+    }
+    .openedPost-author .author-info .author--createdAt.loading {
+        @apply rounded-xl bg-gray-400 text-gray-400 animate-pulse;
+    }
+}

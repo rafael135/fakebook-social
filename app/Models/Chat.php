@@ -15,4 +15,6 @@ class Chat extends Model
         "user_from",
         "user_to"
     ];
+
+    
 }

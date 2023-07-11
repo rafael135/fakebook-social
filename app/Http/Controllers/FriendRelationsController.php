@@ -18,12 +18,12 @@ class FriendRelationsController extends Controller
     public static function getFollowing(User $targetUser) : Collection {
         $friendRelations = $targetUser->following()->get();
 
-        $friendRelations = $friendRelations->toArray();
+        $friendRelations = $friendRelations;
 
         $following = collect(); 
 
         foreach($friendRelations as $friend) {
-            $following->push($friend["user_to"]);
+            $following->push($friend->user_to);
         }
 
         return $following;
@@ -35,12 +35,12 @@ class FriendRelationsController extends Controller
     public static function getFollowers(User $targetUser) : Collection {
         $friendRelations = $targetUser->followers()->get();
 
-        $friendRelations = $friendRelations->toArray();
+        $friendRelations = $friendRelations;
 
         $followers = collect();
 
         foreach($friendRelations as $friend) {
-            $followers->push($friend["user_from"]);
+            $followers->push($friend->user_from);
         }
 
         return $followers;
@@ -75,24 +75,25 @@ class FriendRelationsController extends Controller
             return redirect()->route("auth.login");
         }
 
+        $followers = self::getFollowers($loggedUser);
         $following = self::getFollowing($loggedUser);
-
-        //dd($following);
+        //dd($followers, $following);
 
         $friends = collect();
 
-        foreach($following as $friend) {
-            $user = User::find($friend);
-
-            $friends->add(UserController::checkUser($user));
+        foreach($followers as $follower) {
+            foreach($following as $follow) {
+                if($follower == $follow) {
+                    $friends->add($follower);
+                }
+            }
         }
 
-        
-        //dd($friends);
+        dd($friends);
 
-        return view("friends", [
-            "loggedUser" => $loggedUser,
-            "friends" => $friends
-        ]);
+        
+
+
+        return view("friends", ["loggedUser" => $loggedUser, "friends" => $friends]);
     }
 }

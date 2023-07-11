@@ -26,7 +26,7 @@
             </div>
         -->
 
-            <button id="posts-opts-dropdown-btn-{{$post->id}}" data-dropdown-toggle="post-opts-dropdown-{{$post->id}}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-transparent rounded-lg hover:bg-gray-200 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
+            <button id="posts-opts-dropdown-btn-{{$post->id}}" data-dropdown-toggle="post-opts-dropdown-{{$post->id}}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-transparent rounded-lg hover:bg-gray-300 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
             </button>
         
@@ -54,8 +54,8 @@
             
         </div>
     </div>
-    <div class="post-body px-2 w-full border-solid border-b border-gray-300">
-        <div class="post--text p-2 my-2 rounded-lg text-gray-800 bg-gray-200">
+    <div class="post-body group px-2 w-full border-solid border-b border-gray-300 cursor-pointer hover:bg-slate-200" onclick="openPost({{$post->id}})" data-modal-target="openPost-modal" data-modal-toggle="openPost-modal">
+        <div class="post--text p-2 my-2 rounded-lg text-gray-800 bg-gray-200 group-hover:bg-gray-300">
             <p>@php echo(nl2br($post->body)); @endphp</p>
         </div>
     </div>

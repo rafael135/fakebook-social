@@ -17,4 +17,12 @@ class Message extends Model
         "user_to",
         "body"
     ];
+
+    public function author() {
+        return $this->belongsTo(User::class, "user_from", "id");
+    }
+
+    public function target() {
+        return $this->hasOne(User::class, "user_to", "id");
+    }
 }

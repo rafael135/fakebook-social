@@ -40,6 +40,8 @@ class HomeController extends Controller
 
         $userPosts = $loggedUser->posts;
 
+        $loggedUser["posts_count"] = count($userPosts);
+
         foreach($userPosts as $userPost) {
             $postLike = DB::table("posts_likes")->select()->where("post_id", "=", $userPost->id)->where("user_id", "=", $loggedUser->id)->get()->count();
             $userPost["liked"] = ($postLike > 0) ? true : false;

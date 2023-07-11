@@ -1,4 +1,6 @@
-@import url("friends.css");
+@import url("openedPost.css");
+@import url("messages.css");
+
 
 @tailwind base;
 @tailwind components;

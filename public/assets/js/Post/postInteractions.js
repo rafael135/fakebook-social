@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import Routes from "../BASE/Routes.js";
 let userTokenInput = document.getElementById("userToken");
 let newPostForm = document.getElementById("newPostForm");
+let openedPostModal = document.getElementById("openPost-modal");
 newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("focusin", (e) => {
     newPostForm.querySelector("span").style.display = "none";
 });
@@ -120,7 +121,58 @@ function likePost(likeBtn, postId) {
         }
     });
 }
-function openComments(id) {
+function openPost(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.add("loading");
+        openedPostModal.querySelector("div.author--name").classList.add("loading");
+        openedPostModal.querySelector("div.author--createdAt").classList.add("loading");
+        openedPostModal.querySelector("div.post--text").classList.add("loading");
+        // @ts-expect-error
+        let req = yield fetch(route("api.post.get", { id: id }), {
+            method: "GET",
+            headers: headers
+        });
+        let res = yield req.json();
+        if (res.status >= 400 && res.status <= 404) {
+            return;
+        }
+        if (res.response.user === null || res.response.post === null) {
+            return;
+        }
+        //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.remove("loading");
+        openedPostModal.querySelector("div.author--name").classList.remove("loading");
+        openedPostModal.querySelector("div.author--createdAt").classList.remove("loading");
+        openedPostModal.querySelector("div.post--text").classList.remove("loading");
+        openedPostModal.querySelector("span.like-btn").setAttribute("data-post-id", res.response.post.id.toString());
+        openedPostModal.querySelector("span.chat-btn").setAttribute("data-post-id", res.response.post.id.toString());
+        openedPostModal.querySelector("span.share-btn").setAttribute("data-post-id", res.response.post.id.toString());
+        if (res.response.user.avatar !== null) {
+            openedPostModal.querySelector("img#openedPost-author--img").src = res.response.user.avatar;
+        }
+        else {
+            openedPostModal.querySelector("img#openedPost-author--img").src = "https://flowbite.com/docs/images/people/profile-picture-5.jpg";
+        }
+        openedPostModal.querySelector("div.author--name").innerText = res.response.user.name;
+        let date = new Date(res.response.post.updated_at);
+        openedPostModal.querySelector("div.author--createdAt").innerText = date.toLocaleString();
+        openedPostModal.querySelector("div.post--text").innerText = res.response.post.body;
+    });
+}
+function openComments(actionBtn) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let postId = parseInt(actionBtn.getAttribute("data-post-id"));
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        // @ts-expect-error
+        let req = yield fetch(route("api.post.comments", { id: postId }), {
+            method: "GET",
+            headers: headers
+        });
+        let res = yield req.json();
+        console.log(res.response);
+    });
 }
 function sharePost(id) {
 }

@@ -8,24 +8,99 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let templateMessage = document.getElementById("template-message");
+Object.defineProperty(exports, "__esModule", { value: true });
+let userTokenInput = document.getElementById("userToken");
+let templateMessage = document.getElementById("template-msg");
 let messageInput = document.getElementById("messageInput");
-let activeChat = document.getElementById("activeChat");
+let activeChat = document.getElementById("activeChat").querySelector(".chat");
+let loadingSpin = document.getElementById("loading-spin");
 let activeChatMessages = [];
+let activeFriendId = 0;
 messageInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-        alert("Teste");
+        e.preventDefault();
+        sendMessage(messageInput.value, userTokenInput.value, activeFriendId);
     }
 });
 function resetChat() {
-    activeChat.querySelector("div.chat").innerHTML = "";
+    activeChat.innerHTML = "";
     activeChatMessages = [];
 }
-function setChat() {
+function setLoadingScreen() {
+    let loadingSpinClone = loadingSpin.cloneNode(true);
+    loadingSpinClone.classList.remove("hide");
+    loadingSpinClone.classList.add("show");
+    activeChat.appendChild(loadingSpinClone);
+    activeChat.classList.add("loading-screen");
 }
-function sendMessage(msg, from, to) {
+function loadingCompleted() {
+    activeChat.classList.remove("loading-screen");
+}
+function checkMessages(target) {
     return __awaiter(this, void 0, void 0, function* () {
+        let userToken = userTokenInput.value;
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        // @ts-expect-error
+        let req = yield fetch(route("api.chat.getMessages"), {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                userToken: userToken,
+                targetId: target
+            })
+        });
+        let res = yield req.json();
+        if (res.status == 204) {
+            return;
+        }
+        loadingCompleted();
+        resetChat();
+        res.response.forEach((msg) => {
+            addNewMessageToActiveChat(msg);
+        });
     });
 }
-function checkMessages() {
+function addNewMessageToActiveChat(msg) {
+    let newMessage = templateMessage.cloneNode(true);
+    newMessage.removeAttribute("id");
+    newMessage.classList.remove("hidden");
+    if (msg.is_mine == true) {
+        newMessage.classList.add("mine");
+    }
+    let time = new Date(msg.updated_at);
+    newMessage.querySelector(".msg-author").innerText = msg.author;
+    newMessage.querySelector(".msg-message").innerText = msg.body;
+    newMessage.querySelector(".msg-time").innerText = time.toLocaleTimeString();
+    activeChat.appendChild(newMessage);
+}
+function setChat(friendId) {
+    resetChat();
+    setLoadingScreen();
+    activeFriendId = friendId;
+    checkMessages(friendId);
+}
+function sendMessage(msg, userToken, targetId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        // @ts-expect-error
+        let req = yield fetch(route("api.message.new"), {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                userToken: userToken,
+                targetId: targetId,
+                body: msg
+            })
+        });
+        let res = yield req.json();
+        if (res.status == 400 || res.status == 401) {
+            return;
+        }
+        if (res.status == 201) {
+            addNewMessageToActiveChat(res.response);
+            messageInput.value = "";
+        }
+    });
 }

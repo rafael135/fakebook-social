@@ -44,7 +44,8 @@ export default {
         "16/9": "16 / 9"
       },
       opacity: {
-        "85": ".85"
+        "85": ".85",
+        "65": ".65"
       },
       colors: {
         "custom-cyan": {

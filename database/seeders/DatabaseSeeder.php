@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         User::factory(100)->create();
         FriendRelation::factory(150)->create();
         Post::factory(600)->create();
-        Comment::factory(80)->create();
+        Comment::factory(2000)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

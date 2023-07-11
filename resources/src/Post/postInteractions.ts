@@ -1,9 +1,11 @@
-import { PostLikeType, PostType, RequestType } from "../BASE/RequestTypes.js";
+import { PostLikeType, PostRequestedComments, PostType, RequestType } from "../BASE/RequestTypes.js";
 //import Routes from "../BASE/Routes.js";
 
 let userTokenInput = document.getElementById("userToken") as HTMLInputElement;
 
 let newPostForm = document.getElementById("newPostForm");
+
+let openedPostModal = document.getElementById("openPost-modal") as HTMLDivElement;
 
 newPostForm?.addEventListener("focusin", (e) => {
     newPostForm!.querySelector("span")!.style.display = "none";
@@ -142,8 +144,76 @@ async function likePost(likeBtn: HTMLSpanElement, postId: number) {
 
 }
 
-function openComments(id: number) {
 
+async function openPost(id: number) {
+    let headers = new Headers();
+
+    headers.append("Content-Type", "application/json");
+
+
+    //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.add("loading");
+    (openedPostModal.querySelector("div.author--name") as HTMLDivElement).classList.add("loading");
+    (openedPostModal.querySelector("div.author--createdAt") as HTMLDivElement).classList.add("loading");
+    (openedPostModal.querySelector("div.post--text") as HTMLDivElement).classList.add("loading");
+
+    // @ts-expect-error
+    let req = await fetch(route("api.post.get", { id: id }), {
+        method: "GET",
+        headers: headers
+    });
+
+    let res: PostType = await req.json();
+
+    if(res.status >= 400 && res.status <= 404) {
+        return;
+    }
+
+    if(res.response.user === null || res.response.post === null) {
+        return;
+    }
+
+    //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.remove("loading");
+    (openedPostModal.querySelector("div.author--name") as HTMLDivElement).classList.remove("loading");
+    (openedPostModal.querySelector("div.author--createdAt") as HTMLDivElement).classList.remove("loading");
+    (openedPostModal.querySelector("div.post--text") as HTMLDivElement).classList.remove("loading");
+
+
+
+    (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
+    (openedPostModal.querySelector("span.chat-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
+    (openedPostModal.querySelector("span.share-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
+
+
+    if(res.response.user.avatar !== null) {
+        (openedPostModal.querySelector("img#openedPost-author--img") as HTMLImageElement).src = res.response.user.avatar;
+    } else {
+        (openedPostModal.querySelector("img#openedPost-author--img") as HTMLImageElement).src = "https://flowbite.com/docs/images/people/profile-picture-5.jpg";
+    }
+
+    (openedPostModal.querySelector("div.author--name") as HTMLDivElement).innerText = res.response.user.name;
+
+    let date = new Date(res.response.post.updated_at);
+    (openedPostModal.querySelector("div.author--createdAt") as HTMLDivElement).innerText = date.toLocaleString();
+
+    (openedPostModal.querySelector("div.post--text") as HTMLDivElement).innerText = res.response.post.body;
+    
+}
+
+async function openComments(actionBtn: HTMLSpanElement) {
+    let postId = parseInt(actionBtn.getAttribute("data-post-id") as string);
+
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // @ts-expect-error
+    let req = await fetch(route("api.post.comments", { id: postId }), {
+        method: "GET",
+        headers: headers
+    })
+
+    let res: PostRequestedComments = await req.json();
+
+    console.log(res.response);
 }
 
 function sharePost(id: number) {

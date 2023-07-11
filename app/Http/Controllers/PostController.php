@@ -32,8 +32,14 @@ class PostController extends Controller
             ], 404);
         }
 
+        $author = $post->user;
+        $author = UserController::checkUser($author);
+
         return response()->json([
-            "response" => $post,
+            "response" => [
+                "post" => $post,
+                "user" => $author
+            ],
             "status" => 200
         ], 200);
     }
@@ -181,6 +187,16 @@ class PostController extends Controller
 
         if($rawUser->first() != null) {
             $post = Post::find($id);
+            $user = User::find($rawUser->first()->id);
+
+            if($post->user_id != $user->id) {
+                return response()->json([
+                    "response" => "Não autorizado",
+                    "status" => 403
+                ], 403);
+            }
+
+
             $post->delete();
 
             return response()->json([

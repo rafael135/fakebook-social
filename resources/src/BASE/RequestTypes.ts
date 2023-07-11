@@ -31,12 +31,20 @@ export type User = {
     deleted_at: string | null
 }
 
+export type Comment = {
+    id: number;
+    user_id: number;
+    post_id: number;
+    body: string;
+    like_count: number;
+}
+
 export type PostType = {
     response: {
         post: Post,
         user: User | null,
-    }
-    status: number
+    };
+    status: number;
 }
 
 export type PostLike = {
@@ -64,4 +72,34 @@ export type FriendRelation = {
 export type FriendRelationRequest = {
     response: boolean | FriendRelation,
     status: number
+}
+
+
+
+export type Message = {
+    chat_id: number,
+    user_from: number,
+    user_to: number,
+    is_mine: boolean,
+    author: string,
+    body: string,
+    created_at: string,
+    updated_at: string
+}
+
+
+export type RequestedMessagesResponse = {
+    response: Message[],
+    status: number
+}
+
+
+export type newMessageResponse = {
+    response: Message,
+    status: number
+}
+
+export type PostRequestedComments = {
+    response: Comment[];
+    status: number;
 }
