@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let userTokenInput = document.getElementById("userToken");
 let newPostForm = document.getElementById("newPostForm");
 let openedPostModal = document.getElementById("openPost-modal");
+let openedPostComments = openedPostModal.querySelector("div.openedPost-comments");
 newPostForm === null || newPostForm === void 0 ? void 0 : newPostForm.addEventListener("focusin", (e) => {
     newPostForm.querySelector("span").style.display = "none";
 });
@@ -123,6 +124,7 @@ function likePost(likeBtn, postId) {
 }
 function openPost(id) {
     return __awaiter(this, void 0, void 0, function* () {
+        openedPostComments.innerHTML = "";
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
         //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.add("loading");
@@ -160,6 +162,21 @@ function openPost(id) {
         openedPostModal.querySelector("div.post--text").innerText = res.response.post.body;
     });
 }
+function addCommentsToPost(comment) {
+    let newComment = document.getElementById("template-comment").cloneNode(true);
+    newComment.removeAttribute("id");
+    newComment.setAttribute("data-comment-id", comment.id.toString());
+    if (comment.author.avatar == null) {
+        newComment.querySelector("img").src = "https://flowbite.com/docs/images/people/profile-picture-5.jpg";
+    }
+    else {
+        newComment.querySelector("img").src = comment.author.avatar;
+    }
+    newComment.querySelector("span.comment--author").innerText = comment.author.name;
+    newComment.querySelector("div.comment--body").innerText = comment.body;
+    newComment.querySelector("span.comment--likes").innerText = comment.like_count.toString();
+    openedPostComments.append(newComment);
+}
 function openComments(actionBtn) {
     return __awaiter(this, void 0, void 0, function* () {
         let postId = parseInt(actionBtn.getAttribute("data-post-id"));
@@ -171,7 +188,21 @@ function openComments(actionBtn) {
             headers: headers
         });
         let res = yield req.json();
-        console.log(res.response);
+        if (res.status === 400 || res.status === 404) {
+            return;
+        }
+        let commentsInPost = openedPostComments.childNodes;
+        res.response.forEach((comment) => {
+            let valid = true;
+            commentsInPost.forEach((postComment) => {
+                if (postComment.getAttribute("data-comment-id") === comment.id.toString()) {
+                    valid = false;
+                }
+            });
+            if (valid == true) {
+                addCommentsToPost(comment);
+            }
+        });
     });
 }
 function sharePost(id) {

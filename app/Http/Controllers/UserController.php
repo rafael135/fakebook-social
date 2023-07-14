@@ -332,6 +332,9 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Obtem o avatar e capa do usuario, se houver
+     */
     public static function checkUser(User $targetUser) : User {
         $userFiles = "users/";
 

@@ -65,6 +65,8 @@ class PostController extends Controller
 
         $comments = $post->comments;
 
+        $comments = CommentController::getCommentsAuthor($comments);
+
         return response()->json([
             "response" => $comments,
             "status" => 200

@@ -175,23 +175,25 @@
                     </div>
                 </div>
 
-                <div class="openedPost-comments">
-                    <div class="post--comment">
-                        <div id="template-comment" class="comment--avatar">
-                            <img src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="">
-                        </div>
-
-                        <div class="comment--details">
-                            <span class="comment--author">Joao Bolota</span>
-
-                            <div class="comment--body">
-                                Corpo longo de comentario longo para teste longo
-                            </div>
-                        </div>
-
-                        <span class="comment--likes">120</span>
-                        <span class="comment--reply">Responder</span>
+                <div id="template-comment" class="post--comment">
+                    <div class="comment--avatar">
+                        <img src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="">
                     </div>
+
+                    <div class="comment--details">
+                        <span class="comment--author">Joao Bolota</span>
+
+                        <div class="comment--body">
+                            Corpo longo de comentario longo para teste longo
+                        </div>
+                    </div>
+
+                    <span class="comment--likes">120</span>
+                    <span class="comment--reply">Responder</span>
+                </div>
+
+                <div class="openedPost-comments">
+                    
                 </div>
 
                 <div class="openedPost-details">
@@ -229,6 +231,7 @@
 
     <script src="{{asset("assets/js/Profile/profileInteractions.js")}}"></script>
     <script src="{{asset("assets/js/Post/postInteractions.js")}}"></script>
+    <script src="{{asset("assets/js/Post/commentInteractions.js")}}"></script>
 
 
 

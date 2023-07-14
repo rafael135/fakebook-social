@@ -89,13 +89,16 @@ class MessageController extends Controller
         if($existentChat->count() == 0) {
             $existentChat = DB::table("chats")->select()->where("user_from", "=", $loggedUser->id)->where("user_to", "=", $targetId)->get();
             if($existentChat->count() == 0) {
-                return response()->json([
-                    "messages" => false,
-                    "status" => 204
-                ], 204);
+                $activeChat = Chat::create([
+                    "user_from" => $loggedUser->id,
+                    "user_to"   => $targetId,
+                ]);
+            } else {
+                $activeChat = Chat::find($existentChat->first()->id);
             }
+        } else {
+            $activeChat = Chat::find($existentChat->first()->id);
         }
-        $activeChat = Chat::find($existentChat->first()->id);
 
 
         $rawMessages = DB::table("messages")->where("chat_id", "=", $activeChat->id)->get();

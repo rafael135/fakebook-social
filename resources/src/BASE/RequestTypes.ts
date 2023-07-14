@@ -99,7 +99,16 @@ export type newMessageResponse = {
     status: number
 }
 
+export type PostComment = {
+    id: number;
+    author: User;
+    user_id: number;
+    post_id: number;
+    body: string;
+    like_count: number;
+}
+
 export type PostRequestedComments = {
-    response: Comment[];
+    response: PostComment[];
     status: number;
 }

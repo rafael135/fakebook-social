@@ -34,10 +34,13 @@
 
 
     .openedPost-comments {
-        @apply flex flex-col justify-start px-2 py-4 border-solid border-b border-gray-300 overflow-y-scroll;
+        @apply flex flex-col gap-3 justify-start px-2 py-4 border-solid border-b border-gray-300 max-h-[512px] overflow-y-scroll;
     }
     .openedPost-comments .post--comment {
         @apply relative max-w-max flex bg-slate-200 p-2 rounded-lg;
+    }
+    .post--comment#template-comment {
+        display: none;
     }
     .post--comment .comment--avatar {
         @apply w-12 h-12 rounded-full overflow-hidden;
@@ -55,10 +58,10 @@
         @apply text-sm ms-1 max-w-128;
     }
     .post--comment .comment--likes {
-        @apply absolute cursor-pointer -bottom-2.5 right-16 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5;
+        @apply absolute cursor-pointer -bottom-2 right-16 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5;
     }
     .post--comment .comment--reply {
-        @apply absolute cursor-pointer -bottom-2.5 -right-4 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5 hover:underline;
+        @apply absolute cursor-pointer -bottom-2 -right-4 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5 hover:underline;
     }
 
 
