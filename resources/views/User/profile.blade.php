@@ -196,6 +196,10 @@
                     
                 </div>
 
+                <div class="openedPost-newComment--input">
+                    <input id="newCommentInput" type="text" placeholder="Faça um comentário na postagem">
+                </div>
+
                 <div class="openedPost-details">
                     <div class="post--action">
                         <span class="like-btn" data-post-id="" onclick="likePost(this)">
@@ -231,7 +235,6 @@
 
     <script src="{{asset("assets/js/Profile/profileInteractions.js")}}"></script>
     <script src="{{asset("assets/js/Post/postInteractions.js")}}"></script>
-    <script src="{{asset("assets/js/Post/commentInteractions.js")}}"></script>
 
 
 

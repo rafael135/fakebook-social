@@ -1,7 +1,40 @@
 @extends("layouts.layout")
 
 @section("content")
-    <div id="newPostForm" class="post-action mx-8 lg:mx-auto mt-4 p-4 bg-gradient-to-r from-blue-600 from-70% to-blue-700 rounded-md flex gap-4 justify-center items-center lg:w-10/12">
+    <form accordion class="max-w-5xl mx-auto" method="GET" action="{{route("search")}}">
+        @csrf
+        <div class="searchBar-primary">
+            <div class="type-search">
+                <select required title="Filtrar por" name="type" id="">
+                    <option disabled selected value="default">Filtrar por</option>
+                    <option value="group">Grupo</option>
+                    <option value="page">Página</option>
+                    <option value="profile">Perfil</option>
+                    <option value="post">Postagem</option>
+                </select>
+            </div>
+
+            <div class="input-search">
+                <input required name="searchTerm" type="text" placeholder="O que procura?">
+            </div>
+
+            <div class="searchBar-accordion--btn group">
+                <span class="text-white group-hover:text-white/80">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+
+        <div class="searchBar-accordion--body">
+            <!-- TODO -->
+        </div>
+    </form>
+
+    <script src="{{asset("assets/js/Components/accordion.js")}}"></script>
+
+    <div id="newPostForm" class="post-action mx-8 lg:mx-auto mt-4 p-4 bg-gradient-to-r from-blue-600 from-70% to-blue-700 rounded-md flex gap-4 justify-center items-center lg:max-w-5xl">
         <a class="flex-1 border text-decoration-none border-solid rounded-lg border-gray-200 bg-gray-50 text-gray-800 px-3 py-4 focus-visible:outline-0" contenteditable="true" id="newPost" aria-multiline="true" aria-placeholder="">
             <span contenteditable="false" class="">O que você está pensando hoje {{$loggedUser->name}}?</span>
         </a>
@@ -41,8 +74,9 @@
                 </div>
             </div>
         </div>
+    @endif
 
-        
+    @if($feedPosts->count() > 0)
         <!-- Open Post Modal -->
         <div id="openPost-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-8 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative w-full lg:max-w-7xl max-h-full rounded-md shadow bg-white">
@@ -93,6 +127,10 @@
                     
                 </div>
 
+                <div class="openedPost-newComment--input">
+                    <input id="newCommentInput" type="text" placeholder="Faça um comentário na postagem">
+                </div>
+
                 <div class="openedPost-details">
                     <div class="post--action">
                         <span class="like-btn" data-post-id="" onclick="likePost(this)">
@@ -126,7 +164,6 @@
     @endif
 
     <script src="{{asset("assets/js/Post/postInteractions.js")}}"></script>
-    <script src="{{asset("assets/js/Post/commentInteractions.js")}}"></script>
 
     
 

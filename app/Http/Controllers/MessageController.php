@@ -35,6 +35,7 @@ class MessageController extends Controller
         //dd($friends);
 
         return view("messages", [
+            "pageName" => "messages",
             "loggedUser" => $loggedUser,
             "friends" => $friends
         ]);

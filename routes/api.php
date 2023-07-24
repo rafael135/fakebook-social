@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -32,9 +33,10 @@ Route::post("/chat/messages", [MessageController::class, "getChatMessages"])->wi
 Route::post("/message/new", [MessageController::class, "newMessageTo"])->withoutMiddleware([Authenticate::class])->name("api.message.new");
 
 Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class])->name("api.post.comments");
-Route::get("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class])->name("api.post.get");
+Route::patch("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class])->name("api.post.get");
 
 Route::post("/post", [PostController::class, "newPost"])->withoutMiddleware([Authenticate::class])->name("api.post.new");
+Route::post("/post/{id}/comments", [CommentController::class, "newComment"])->withoutMiddleware([Authenticate::class])->name("api.post.comments.new");
 Route::delete("/post/{id}", [PostController::class, "deletePost"])->withoutMiddleware(Authenticate::class)->name("api.post.delete");
 
 

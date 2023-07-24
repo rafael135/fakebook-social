@@ -3,9 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Http\Controllers\UserController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -74,5 +77,29 @@ class User extends Authenticatable
      */
     public function followers() {
         return $this->hasMany(FriendRelation::class, "user_to", "id");
+    }
+
+    public static function getUsersModelsFromFriendRelations(Collection $targetUsers) : Collection {
+        $users = collect();
+
+        foreach($targetUsers as $userRelation) {
+            $user = User::find($userRelation->user_from);
+            $user = UserController::checkUser($user);
+            $users->push($user);
+        }
+
+        return $users;
+    }
+
+    public static function getUsersImgs(Collection $targetUsers) : Collection {
+        $users = collect();
+
+        foreach($targetUsers as $targetUser) {
+            $targetUser = UserController::checkUser($targetUser);
+
+            $users->push($targetUser);
+        }
+
+        return $users;
     }
 }

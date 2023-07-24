@@ -11,6 +11,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Hamcrest\Type\IsString;
 use Illuminate\Contracts\Cache\Store;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -80,7 +81,7 @@ class UserController extends Controller
     }
 
     /**
-     * Função para checar se um usuário segue o outro, caso sim, exclui o Model da relação e para seguir, caso não, cria o Model da relação e segue
+     * Função para checar se um usuário segue o outro, caso sim, exclui o Model da relação, caso não, cria o Model da relação e segue
      * 
      * 
      */
@@ -113,6 +114,13 @@ class UserController extends Controller
 
         if($userTo == null) { // Checa se o usuário para ser seguido é válido
             return response()->json([ "response" => false, "status" => 403 ], 403);
+        }
+
+        if($userFrom->id == $userTo->id) {
+            return response()->json([
+                "response" => false,
+                "status" => 400
+            ], 400);
         }
 
         $relation = FriendRelationsController::checkRelationByUserIds($userFrom->id, $userTo->id);
@@ -204,6 +212,7 @@ class UserController extends Controller
         $profileUser["verified_posts"] = $verifiedPosts;
 
         return view("User.profile", [
+            "pageName" => "profile",
             "loggedUser" => $loggedUser,
             "profileUser" => $profileUser
         ]);
@@ -212,17 +221,98 @@ class UserController extends Controller
     public function showUserFollowers(Request $request) {
         $loggedUser = AuthController::checkLogin();
 
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
+
         $uniqueUrl = $request->route()->parameter("uniqueUrl", false);
 
-        dd($uniqueUrl);
+        $dbRes = DB::table("users")->select(["id"])->where("uniqueUrl", "=", $uniqueUrl)->get();
+
+        if($dbRes->count() == 0) {
+            return redirect()->route("home")->with("error", "Perfil de usuário não encontrado!");
+        }
+
+        $profile = User::find($dbRes->first()->id);
+
+        $followers = $profile->followers()->get();
+        $followers = User::getUsersModelsFromFriendRelations($followers);
+
+
+
+        $friendRelations = FriendRelationsController::getFollowers($loggedUser);
+
+        $verifiedFollowers = collect();
+
+        foreach($followers as $follower) {
+            $follower["is_friend"] = false;
+            $follower["is_mine"] = false;
+            foreach($friendRelations as $LoggedUsrfriendId) {
+                $friendProfile = User::find($LoggedUsrfriendId);
+                if($follower->id == $friendProfile->id) {
+                    $follower["is_friend"] = true;
+                }
+            }
+
+            if($follower->id == $loggedUser->id) {
+                $follower["is_mine"] = true;
+            }
+
+            $verifiedFollowers->push($follower);
+            
+        }
+
+        return view("User.userFollowers", [
+            "pageName" => "profile",
+            "loggedUser" => $loggedUser,
+            "profile" => $profile,
+            "followers" => $verifiedFollowers
+        ]);
     }
 
     public function showUserFollowing(Request $request) {
         $loggedUser = AuthController::checkLogin();
 
+        if($loggedUser == false) {
+            return redirect()->route("auth.login");
+        }
+
         $uniqueUrl = $request->route()->parameter("uniqueUrl", false);
 
-        dd($uniqueUrl);
+        $dbRes = DB::table("users")->select(["id"])->where("uniqueUrl", "=", $uniqueUrl)->get();
+
+        if($dbRes->count() == 0) {
+            return redirect()->route("home")->with("error", "Perfil de usuário não encontrado!");
+        }
+
+        $profile = User::find($dbRes->first()->id);
+
+        $following = $profile->following()->get();
+        $following = User::getUsersModelsFromFriendRelations($following);
+
+
+        $friendRelations = FriendRelationsController::getFollowing($loggedUser);
+
+        $verifiedFollowing = collect();
+        foreach($friendRelations as $friendId) {
+            $friendProfile = User::find($friendId);
+            foreach($following as $follow) {
+                if($follow->id == $friendProfile->id) {
+                    $follow["is_friend"] = true;
+                } else {
+                    $follow["is_friend"] = false;
+                }
+
+                $verifiedFollowing->add($follow);
+            }
+        }
+
+        return view("User.userFollowers", [
+            "pageName" => "profile",
+            "loggedUser" => $loggedUser,
+            "profile" => $profile,
+            "following" => $verifiedFollowing
+        ]);
     }
 
     public function userConfig(Request $request) {
@@ -339,11 +429,11 @@ class UserController extends Controller
         $userFiles = "users/";
 
         if($targetUser->avatar != null) {
-            $targetUser["avatar_url"] = Storage::url("public/" . $userFiles . $targetUser->id . "/" . $targetUser->avatar);
+            $targetUser["avatar_url"] = Storage::url($userFiles . $targetUser->id . "/" . $targetUser->avatar);
         }
 
         if($targetUser->cover != null) {
-            $targetUser["cover_url"] = Storage::url("public/" . $userFiles . $targetUser->id . "/" . $targetUser->cover);
+            $targetUser["cover_url"] = Storage::url($userFiles . $targetUser->id . "/" . $targetUser->cover);
         }
 
         return $targetUser;

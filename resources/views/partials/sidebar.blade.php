@@ -13,7 +13,7 @@
                         </path>
                     </svg>
                 </button>
-                <a href="{{route("home")}}" class="flex ml-2 md:mr-24">
+                <a href="{{route("home")}}" class="flex ml-2">
                     <!--<img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" />-->
                     <span class="self-center text-xl font-semibold text-white sm:text-2xl whitespace-nowrap dark:text-white">
                         Fakebook
@@ -21,7 +21,7 @@
                 </a>
             </div>
 
-            <div class="text-white flex items-center font-bold text-2xl">
+            <div class="flex-1 flex items-center justify-center">
                 
             </div>
 
@@ -84,7 +84,7 @@
             <li>
                 
                 <a href="{{route("home")}}"
-                    class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
+                    class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "home") bg-white/10 @endif">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
                         <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
                         <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
@@ -95,7 +95,7 @@
             <li>
                 
                 <a href="{{route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])}}"
-                    class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
+                    class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "profile") bg-white/10 @endif">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
@@ -107,7 +107,7 @@
             @if($loggedUser != false)
                 <li>
                     <a href="{{route("user.friends")}}"
-                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
+                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "friends") bg-white/10 @endif">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                         </svg>
@@ -116,7 +116,7 @@
                 </li>
                 <li>
                     <a href="{{route("user.messages")}}"
-                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
+                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "messages") bg-white/10 @endif">
                         <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" fill="currentColor" class="bi bi-chat-left-fill" viewBox="0 0 16 16">
                             <path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                         </svg>

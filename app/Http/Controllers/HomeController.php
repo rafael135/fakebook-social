@@ -59,6 +59,7 @@ class HomeController extends Controller
         //dd($feedPosts);
 
         return view("home", [
+            "pageName" => "home",
             "loggedUser" => $loggedUser,
             "feedPosts" => $feedPosts
         ]);

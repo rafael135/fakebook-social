@@ -1,12 +1,17 @@
-import { PostComment, PostLikeType, PostRequestedComments, PostType, RequestType } from "../BASE/RequestTypes.js";
+import { CreateNewCommentRequest, PostComment, PostLikeType, PostRequestedComments, PostType, RequestType } from "../BASE/RequestTypes.js";
 //import Routes from "../BASE/Routes.js";
 
 let userTokenInput = document.getElementById("userToken") as HTMLInputElement;
 
+let postsDiv = document.querySelector("div.posts") as HTMLDivElement;
+
 let newPostForm = document.getElementById("newPostForm");
 
+let openedPostId = -1;
 let openedPostModal = document.getElementById("openPost-modal") as HTMLDivElement;
-let openedPostComments = openedPostModal.querySelector("div.openedPost-comments") as HTMLDivElement;
+let openedPostComments = openedPostModal?.querySelector("div.openedPost-comments") as HTMLDivElement;
+
+let newCommentInput = document.getElementById("newCommentInput") as HTMLInputElement;
 
 newPostForm?.addEventListener("focusin", (e) => {
     newPostForm!.querySelector("span")!.style.display = "none";
@@ -23,6 +28,13 @@ newPostForm?.addEventListener("keydown", (e) => {
         if(newPostForm!.innerText == "") {
             e.preventDefault();
         }
+    }
+});
+
+
+newCommentInput?.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") {
+        makeNewComment();
     }
 });
 
@@ -62,13 +74,9 @@ async function addNewPost(btn: HTMLElement) {
 
     let res: PostType = await req.json();
     if(res.status === 201) {
-        let newPostNode = document.querySelector("div.post")!.cloneNode(true);
-        let newPost = newPostNode.childNodes[0].parentElement as HTMLDivElement;
-
-        (newPost!.querySelector(".author--name")! as HTMLDivElement).innerHTML = `${res.response.user!.name}`;
-        (newPost!.querySelector(".post--created_at")! as HTMLDivElement).innerHTML = `${res.response.post.created_at}`;
-
-        console.log(newPost);
+        //let newPost = document.querySelector("div.post")!.cloneNode(true) as HTMLDivElement;
+        // TODO -> Add new post to the page after response
+        window.location.reload();
     }
     
 }
@@ -145,9 +153,48 @@ async function likePost(likeBtn: HTMLSpanElement, postId: number) {
 
 }
 
+async function likeOpenedPost(likeBtn: HTMLSpanElement, postId: number) {
+    let userToken = userTokenInput.value;
+
+    let headers =  new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // @ts-expect-error
+    let req = await fetch(route("api.post.like", {id: postId}), {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+            userToken: userToken
+        })
+    });
+
+
+
+    let res: PostLikeType = await req.json();
+
+    let outsidePost = document.querySelector(`div.post[data-post-id='${postId}']`) as HTMLDivElement;
+    let outsidePostLikeBtn = outsidePost.querySelector("span.like-btn") as HTMLSpanElement;
+
+    if(res.status === 201) {
+        likeBtn.classList.add("liked");
+
+        outsidePostLikeBtn.classList.add("text-blue-600");
+        outsidePostLikeBtn.classList.remove("text-gray-700");
+    } else {
+        likeBtn.classList.remove("liked");
+
+        outsidePostLikeBtn.classList.add("text-gray-700");
+        outsidePostLikeBtn.classList.remove("text-blue-600");
+    }
+}
+
 
 async function openPost(id: number) {
+    openedPostId = id;
+
+    (openedPostModal.querySelector("img#openedPost-author--img") as HTMLImageElement).src = "";
     openedPostComments.innerHTML = "";
+    (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).classList.remove("liked");
 
     let headers = new Headers();
 
@@ -161,8 +208,11 @@ async function openPost(id: number) {
 
     // @ts-expect-error
     let req = await fetch(route("api.post.get", { id: id }), {
-        method: "GET",
-        headers: headers
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify({
+            userToken: userTokenInput.value
+        })
     });
 
     let res: PostType = await req.json();
@@ -188,7 +238,7 @@ async function openPost(id: number) {
 
 
     if(res.response.user.avatar !== null) {
-        (openedPostModal.querySelector("img#openedPost-author--img") as HTMLImageElement).src = res.response.user.avatar;
+        (openedPostModal.querySelector("img#openedPost-author--img") as HTMLImageElement).src = res.response.user.avatar_url;
     } else {
         (openedPostModal.querySelector("img#openedPost-author--img") as HTMLImageElement).src = "https://flowbite.com/docs/images/people/profile-picture-5.jpg";
     }
@@ -199,26 +249,48 @@ async function openPost(id: number) {
     (openedPostModal.querySelector("div.author--createdAt") as HTMLDivElement).innerText = date.toLocaleString();
 
     (openedPostModal.querySelector("div.post--text") as HTMLDivElement).innerText = res.response.post.body;
+
+    if(res.response.post.is_liked == true) {
+        (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).classList.add("liked");
+    }
+    
+    (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).setAttribute("onClick", `likeOpenedPost(this, ${res.response.post.id})`);
+
+
+
+    openComments(openedPostModal.querySelector("span.chat-btn") as HTMLSpanElement);
     
 }
 
-function addCommentsToPost(comment: PostComment) {
+function addCommentToPost(comment: PostComment) {
     let newComment = (document.getElementById("template-comment") as HTMLDivElement).cloneNode(true) as HTMLDivElement;
 
     newComment.removeAttribute("id");
-    newComment.setAttribute("data-comment-id", comment.id.toString());
+    if(Number.isInteger(comment.id) == true) {
+        newComment.setAttribute("data-comment-id", comment.id.toString());
+    } else {
+        // @ts-ignore
+        newComment.setAttribute("data-comment-id", comment.id);
+    }
+    
 
-    if(comment.author.avatar == null) {
+    if(comment.author.avatar_url == null) {
         (newComment.querySelector("img") as HTMLImageElement).src = "https://flowbite.com/docs/images/people/profile-picture-5.jpg";
     } else {
-        (newComment.querySelector("img") as HTMLImageElement).src = comment.author.avatar;
+        (newComment.querySelector("img") as HTMLImageElement).src = comment.author.avatar_url;
     }
 
     (newComment.querySelector("span.comment--author") as HTMLSpanElement).innerText = comment.author.name;
 
     (newComment.querySelector("div.comment--body") as HTMLDivElement).innerText = comment.body;
 
-    (newComment.querySelector("span.comment--likes") as HTMLSpanElement).innerText = comment.like_count.toString();
+    if(Number.isInteger(comment.like_count) == true) {
+        (newComment.querySelector("span.comment--likes") as HTMLSpanElement).innerText = comment.like_count.toString();
+    } else {
+        // @ts-ignore
+        (newComment.querySelector("span.comment--likes") as HTMLSpanElement).innerText = comment.like_count;
+    }
+    
 
 
     openedPostComments.append(newComment);
@@ -254,12 +326,60 @@ async function openComments(actionBtn: HTMLSpanElement) {
         });
 
         if(valid == true) {
-            addCommentsToPost(comment);
+            addCommentToPost(comment);
         }
     });
 
+    openedPostComments.scrollTo(0, openedPostComments.scrollHeight);
+}
+
+async function makeNewComment() {
+    //console.log(newCommentInput.value);
+
+    let loggedUserToken = userTokenInput.value;
+    let postId = openedPostId;
+    let commentTxt = newCommentInput.value;
+
+    if(commentTxt == "") {
+        return;
+    }
+
+    newCommentInput.value = "";
+
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // @ts-expect-error
+    let req = await fetch(route("api.post.comments.new", { id: postId }), {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+            userToken: loggedUserToken,
+            body: commentTxt
+        })
+    });
+
+    let res: CreateNewCommentRequest = await req.json();
+
+    if(res.status == 400 || res.status == 401) {
+        return;
+    }
+
+    addCommentToPost(res.response);
+
+    openedPostComments.scrollTo(0, openedPostComments.scrollHeight);
+}
+
+async function likeComment(id: number) {
     
 }
+
+async function replyComment(id: number) {
+
+}
+
+
+
 
 function sharePost(id: number) {
     

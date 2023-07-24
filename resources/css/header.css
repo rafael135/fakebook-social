@@ -1,0 +1,49 @@
+@layer components {
+    .searchBar-primary {
+        @apply flex flex-row mx-0 mt-4 mb-0 border-none bg-blue-600/95 rounded-lg;
+    }
+
+    .searchBar-primary .type-search {
+        @apply flex justify-center items-center rounded-l-lg;
+    }
+    .searchBar-primary .input-search {
+        @apply flex-1 inline-flex rounded-r-lg;
+    }
+    .searchBar-primary .input-search input {
+        @apply w-full bg-black/30 text-white px-4 py-2 outline-none focus:shadow-none focus:outline-none focus:ring-0;
+    }
+    .searchBar-primary .input-search input::placeholder {
+        @apply text-white/75;
+    }
+    .searchBar-primary .type-search select {
+        @apply bg-white/90 text-black py-2 pl-3 pr-8 rounded-l-lg outline-none focus:ring-0;
+    }
+    .searchBar-primary .type-search select option:disabled {
+        @apply text-black/65;
+    }
+    .searchBar-primary .type-search.opened select {
+        @apply rounded-bl-none;
+    }
+
+    .searchBar-accordion--btn {
+        @apply w-[42px] h-[42px] bg-blue-600/95 rounded-r-lg;
+    }
+    .searchBar-accordion--btn span {
+        @apply w-full h-full rounded-r-lg bg-transparent flex justify-center items-center cursor-pointer;
+    }
+    .searchBar-accordion--btn span svg {
+        @apply text-white fill-white transition-all ease-in-out duration-100;
+    }
+    .searchBar-accordion--btn.opened {
+        @apply transition rounded-br-none;
+    }
+    .searchBar-accordion--btn.opened span svg {
+        @apply rotate-180;
+    }
+    .searchBar-accordion--body {
+        @apply hidden bg-custom-cyan-200 text-white mx-0 rounded-b-lg;
+    }
+    .searchBar-accordion--body.show {
+        @apply block;
+    }
+}

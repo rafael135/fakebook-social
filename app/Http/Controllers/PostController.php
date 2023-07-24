@@ -13,10 +13,22 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public static function getIfPostWasLiked(User $targetUser, Post $targetPost) : bool {
+        $existingRelation = DB::table("posts_likes")->select(["id"])->where("post_id", "=", $targetPost->id)->where("user_id", "=", $targetUser->id)->get();
+
+        if($existingRelation->count() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
     public function getPostById(Request $request) : JsonResponse {
         $id = $request->route()->parameter("id", null);
+        $userToken = $request->input("userToken", null);
 
-        if($id == null) {
+        if($id == null || $userToken == null) {
             return response()->json([
                 "response" => "Parameter 'id' not found",
                 "status" => 400
@@ -25,15 +37,27 @@ class PostController extends Controller
 
         $post = Post::find($id);
 
-        if($post == null) {
+        $rawUser = DB::table("users")->select(["id"])->where("remember_token", "=", $userToken)->get();
+
+        if($post == null || $rawUser->count() == 0) {
             return response()->json([
                 "response" => "Post with id: $id not found",
                 "status" => 404
             ], 404);
         }
 
+        $loggedUser = User::find($rawUser->first()->id);
+
         $author = $post->user;
         $author = UserController::checkUser($author);
+
+        $checkLiked = self::getIfPostWasLiked($loggedUser, $post);
+
+        if($checkLiked == true) {
+            $post["is_liked"] = true;
+        } else {
+            $post["is_liked"] = false;
+        }
 
         return response()->json([
             "response" => [

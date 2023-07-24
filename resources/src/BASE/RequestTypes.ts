@@ -9,16 +9,19 @@ export type Post = {
     type: string,
     body: string,
     created_at: string,
-    updated_at: string
+    updated_at: string,
+    is_liked: boolean | undefined;
 }
 
 export type User = {
     id: number,
     avatar: string | null,
+    avatar_url: string | "",
     birth_date: string | null,
     city: string | null,
     country: string | null,
     cover: string | null,
+    cover_url: string | "",
     email: string,
     email_verified_at: string | null,
     friend_count: number,
@@ -110,5 +113,11 @@ export type PostComment = {
 
 export type PostRequestedComments = {
     response: PostComment[];
+    status: number;
+}
+
+
+export type CreateNewCommentRequest = {
+    response: PostComment,
     status: number;
 }
