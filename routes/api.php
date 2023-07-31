@@ -24,24 +24,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/user/{id}/posts", [UserController::class, "getUserPosts"])->withoutMiddleware([Authenticate::class]);
-Route::get("/user/{id}", [UserController::class, "getUserById"])->withoutMiddleware([Authenticate::class]);
+Route::prefix("/user")->group(function () {
+    Route::get("/{id}/posts", [UserController::class, "getUserPosts"])->withoutMiddleware([Authenticate::class]);
+    Route::get("/{id}", [UserController::class, "getUserById"])->withoutMiddleware([Authenticate::class]);
 
-Route::post("/user/{id}/follow", [UserController::class, "followUser"])->withoutMiddleware([Authenticate::class])->name("api.user.follow");
+    Route::post("/{id}/follow", [UserController::class, "followUser"])->withoutMiddleware([Authenticate::class])->name("api.user.follow");
+});
 
 Route::post("/chat/messages", [MessageController::class, "getChatMessages"])->withoutMiddleware([Authenticate::class])->block(2, 2)->name("api.chat.getMessages");
 Route::post("/message/new", [MessageController::class, "newMessageTo"])->withoutMiddleware([Authenticate::class])->name("api.message.new");
 
-Route::get("/post/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class])->name("api.post.comments");
-Route::patch("/post/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class])->name("api.post.get");
+Route::prefix("/post")->group(function () {
+    Route::get("/{id}/comments", [PostController::class, "getComments"])->withoutMiddleware([Authenticate::class])->name("api.post.comments");
+    Route::patch("/{id}", [PostController::class, "getPostById"])->withoutMiddleware([Authenticate::class])->name("api.post.get");
 
-Route::post("/post", [PostController::class, "newPost"])->withoutMiddleware([Authenticate::class])->name("api.post.new");
-Route::post("/post/{id}/comments", [CommentController::class, "newComment"])->withoutMiddleware([Authenticate::class])->name("api.post.comments.new");
-Route::delete("/post/{id}", [PostController::class, "deletePost"])->withoutMiddleware(Authenticate::class)->name("api.post.delete");
+    Route::post("/", [PostController::class, "newPost"])->withoutMiddleware([Authenticate::class])->name("api.post.new");
+    Route::post("/{id}/comments", [CommentController::class, "newComment"])->withoutMiddleware([Authenticate::class])->name("api.post.comments.new");
+    Route::delete("/post/{id}", [PostController::class, "deletePost"])->withoutMiddleware(Authenticate::class)->name("api.post.delete");
 
-
-
-Route::post("/post/{id}/like", [PostController::class, "likePostById"])->withoutMiddleware([Authenticate::class])->name("api.post.like");
+    Route::post("/{id}/like", [PostController::class, "likePostById"])->withoutMiddleware([Authenticate::class])->name("api.post.like");
+});
 
 
 Route::post("/user/register", [AuthController::class, "createUser"])->withoutMiddleware([Authenticate::class]);

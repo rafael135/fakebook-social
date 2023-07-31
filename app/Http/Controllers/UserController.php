@@ -240,7 +240,7 @@ class UserController extends Controller
 
 
 
-        $friendRelations = FriendRelationsController::getFollowers($loggedUser);
+        $friendRelations = FriendRelationsController::getFollowing($loggedUser);
 
         $verifiedFollowers = collect();
 
@@ -325,6 +325,7 @@ class UserController extends Controller
         $opt = $request->input("option", false);
 
         return view("User.Config.profile", [
+            "pageName" => "config",
             "loggedUser" => $loggedUser,
             "optionPage" => $opt
         ]);

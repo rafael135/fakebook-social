@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Comment;
 use App\Models\FriendRelation;
+use App\Models\Page;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -19,10 +20,11 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::factory(100)->create();
-        FriendRelation::factory(150)->create();
-        Post::factory(600)->create();
-        Comment::factory(2000)->create();
+        User::factory(20)->create();
+        FriendRelation::factory(30)->create();
+        Post::factory(100)->create();
+        Comment::factory(600)->create();
+        Page::factory(20)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

@@ -1,0 +1,32 @@
+@layer components {
+    .auth-input {
+        @apply mb-3 px-2.5 py-1.5 bg-gray-200/50 border-t-0 border-l-0 border-r-0 border-b-2 outline-none border-b-gray-600/75 focus:outline-none focus:border-b-blue-500 focus:ring-0;
+    }
+    .auth-input::placeholder {
+        @apply text-gray-800/80;
+    }
+    .auth-input.error {
+        @apply border-b-red-600;
+    }
+    .auth-input.error::placeholder {
+        @apply text-red-600/80;
+    }
+
+    .auth-checkBox {
+        @apply cursor-pointer me-[2px] focus:ring-0;
+    }
+    .auth-checkBox:checked {
+        @apply border-blue-600/80;
+    }
+    .auth-checkBox--label {
+        @apply cursor-pointer text-gray-800 font-medium text-sm focus:ring-transparent selection:ring-transparent;
+    }
+
+    .auth-redirect {
+        @apply text-blue-500 hover:underline active:text-blue-600;
+    }
+
+    .auth-button {
+        @apply bg-blue-600 text-white px-4 py-2 block rounded-lg hover:bg-blue-700;
+    }
+}

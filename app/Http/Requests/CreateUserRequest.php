@@ -26,7 +26,7 @@ class CreateUserRequest extends FormRequest
             "email" => "required|email|max:150",
             "password" => "required|min:8|max:200",
             "passwordConfirm" => "required|min:8|max:200",
-            "remember" => "numeric"
+            "remember" => "string"
         ];
     }
 }

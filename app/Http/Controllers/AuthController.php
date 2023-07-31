@@ -17,17 +17,39 @@ use Illuminate\Support\Facades\URL;
 class AuthController extends Controller
 {
     public function loginPage(Request $request) : View | RedirectResponse {
+        $errors = false;
+        if($request->session()->has("errors")) {
+            $errors = $request->session()->get("errors");
+            $request->session()->forget("errors");
+        }
+
         if(self::checkLogin() != false) {
             return redirect()->route("home");
         }
-        return view("auth.login", ["loggedUser" => false]);
+        
+
+        return view("auth.loginPreview", [
+            "loggedUser" => false,
+            "errors" => $errors
+        ]);
     }
 
     public function registerPage(Request $request) : View | RedirectResponse {
+        $errors = false;
+        if($request->session()->has("errors")) {
+            $errors = $request->session()->get("errors");
+            $request->session()->forget("errors");
+        }
+
         if(self::checkLogin() != false) {
             return redirect()->route("home");
         }
-        return view("auth.register", ["loggedUser" => false]);
+
+
+        return view("auth.registerPreview", [
+            "loggedUser" => false,
+            "errors" => $errors
+        ]);
     }
 
     public static function checkLogin() : User | false {
@@ -50,32 +72,38 @@ class AuthController extends Controller
     }
 
 # Action Functions:
-    public function registerAction(CreateUserRequest $request) : RedirectResponse {
-        if(self::checkLogin() != false) {
-            return redirect()->route("home");
-        }
+    public function registerAction(Request $request) : RedirectResponse {
+        
 
-        $data = $request->only([
-            "name",
-            "email",
-            "password"
-        ]);
-
+        $errors = collect();
+        
+        $data["name"] = $request->input("name", false);
+        $data["email"] = $request->input("email", false);
+        $data["password"] = $request->input("password", false);
         $passwordConfirm = $request->input("passwordConfirm", false);
+        $remember = ($request->input("remember", false) == "on") ? true : false;
 
-        if ($data["password"] != $passwordConfirm) {
-            return redirect()->route("auth.register");
+
+        if($data["password"] == null) {
+            $errors->put("name", "Nome não informado!");
         }
 
-        $remember = $request->input("remember", false);
-
-        if($remember == "true") {
-            $remember = true;
-        } else {
-            $remember = false;
+        if($data["password"] == false) {
+            $errors->put("password", "Senha não informada");
+        } else if(strlen($data["password"]) < 8) {
+            $errors->put("password", "Mínimo de 8 caracteres!");
+        } else if ($data["password"] != $passwordConfirm) {
+            $errors->put("password", "As senhas são diferentes!");
+            //return redirect()->route("auth.register");
         }
 
-        if($data != null) {
+        if($data["email"] == false) {
+            $errors->put("email", "E-mail não informado");
+        } else if(filter_var($data["email"], FILTER_VALIDATE_EMAIL) == false) {
+            $errors->put("email", "O E-mail não é válido");
+        }
+        
+        if($errors->count() == 0) {
             $hash = Hash::make($data["password"]);
             $data["password"] = $hash;
 
@@ -100,7 +128,7 @@ class AuthController extends Controller
             }
         }
 
-        return redirect()->route("auth.register");
+        return redirect()->route("auth.register")->with("errors", $errors);
     }
 
     public function loginAction(Request $request) : RedirectResponse {
@@ -108,33 +136,24 @@ class AuthController extends Controller
             return redirect()->route("home");
         }
 
-        $errors = [];
+        $errors = collect();
 
         $data["email"] = $request->input("email", false);
         $data["password"] = $request->input("password", false);
+        $remember = ($request->input("remember", false) == "on") ? true : false;
 
-        if($data["email"] == "") {
-            $errors[] = [
-                "field" => "email",
-                "msg" => "E-mail não informado"
-            ];
+        if($data["email"] == false) {
+            $errors->put("email", "E-mail não informado");
         } 
         else if (filter_var($data["email"], FILTER_VALIDATE_EMAIL) == false) {
-            $errors[] = [
-                "field" => "email",
-                "msg" => "O e-mail não é válido"
-            ];
+            $errors->put("email", "O E-mail não é válido");
         }
 
-        $remember = $request->input("remember", false);
-
-        if($remember == "on") {
-            $remember = true;
-        } else {
-            $remember = false;
+        if(strlen($data["password"]) < 8) {
+            $errors->put("password", "Mínimo de 8 caracteres!");
         }
         
-        if($data != null && count($errors) == 0) {
+        if(count($errors) == 0) {
             $res = Auth::attempt($data, $remember);
             if($res == true) {
                 $rawUser = DB::table("users")->select(["id"])->where("email", "=", $data["email"])->get();
@@ -142,6 +161,8 @@ class AuthController extends Controller
 
                 Auth::login($user, $remember);
                 return redirect()->route("home");
+            } else {
+                $errors->put("all", "E-mail e/ou Senha incorreta");
             }
         }
 

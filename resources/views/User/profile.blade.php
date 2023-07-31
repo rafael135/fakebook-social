@@ -116,7 +116,7 @@
         </div>
     @endif
 
-    <div class="profile-posts mt-4 flex w-full flex-col gap-3 items-center">
+    <div class="profile-posts mt-4 flex w-full flex-col gap-3 pb-4 items-center">
         @foreach ($profileUser->verified_posts as $post)
             <x-post :post="$post" />
         @endforeach

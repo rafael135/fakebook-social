@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FriendRelationsController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get("/", [HomeController::class, "index"])->name("home");
+
 Route::get("/search", [SearchController::class, "index"])->name("search");
 
 Route::get("/register", [AuthController::class, "registerPage"])->name("auth.register");
@@ -30,18 +33,30 @@ Route::post("/register", [AuthController::class, "registerAction"])->name("auth.
 Route::post("/login", [AuthController::class, "loginAction"])->name("auth.loginAction");
 
 
+Route::prefix("/user")->group(function () {
+    Route::post("/user/change/avatar", [UserController::class, "changeAvatar"])->name("user.change.avatar");
+    Route::post("/user/change/cover", [UserController::class, "changeCover"])->name("user.change.cover");
 
-Route::post("/user/change/avatar", [UserController::class, "changeAvatar"])->name("user.change.avatar");
-Route::post("/user/change/cover", [UserController::class, "changeCover"])->name("user.change.cover");
+    Route::get("/config", [UserController::class, "userConfig"])->name("user.config");
+    Route::get("/friends", [FriendRelationsController::class, "showFriends"])->name("user.friends");
+    Route::get("/messages", [MessageController::class, "showMessages"])->name("user.messages");
 
-Route::get("/user/config", [UserController::class, "userConfig"])->name("user.config");
-Route::get("/user/friends", [FriendRelationsController::class, "showFriends"])->name("user.friends");
-Route::get("/user/messages", [MessageController::class, "showMessages"])->name("user.messages");
+    Route::get("/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
+    Route::get("/{uniqueUrl}/followers", [UserController::class, "showUserFollowers"])->name("user.followers");
+    Route::get("/{uniqueUrl}/following", [UserController::class, "showUserFollowing"])->name("user.following");
+});
 
-Route::get("/user/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
-Route::get("/user/{uniqueUrl}/followers", [UserController::class, "showUserFollowers"])->name("user.followers");
-Route::get("/user/{uniqueUrl}/following", [UserController::class, "showUserFollowing"])->name("user.following");
 
+
+Route::prefix("/page")->group(function () {
+    Route::get("/create", [PageController::class, "create"])->name("page.create");
+    Route::get("/{uniqueUrl}", [PageController::class, "show"])->name("page.show");
+});
+
+Route::prefix("/group")->group(function () {
+    Route::get("/create", [GroupController::class, "create"])->name("group.create");
+    Route::get("/{uniqueUrl}", [GroupController::class, "show"])->name("group.show");
+});
 
 
 Route::get("/logout", [AuthController::class, "logout"])->name("user.logout");

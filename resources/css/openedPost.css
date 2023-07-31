@@ -46,7 +46,7 @@
         @apply w-12 h-12 rounded-full overflow-hidden;
     }
     .post--comment .comment--avatar img {
-        @apply w-full h-auto max-w-full;
+        @apply w-full h-full max-w-full;
     }
     .post--comment .comment--details {
         @apply flex flex-col;

@@ -80,11 +80,11 @@
     class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full border-r border-gray-900 bg-gradient-to-r from-slate-900 from-30% to-slate-800 lg:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
     aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-gradient-to-r from-slate-900 from-30% to-slate-800 dark:bg-gray-800">
-        <ul class="space-y-2 font-medium">
-            <li>
+        <ul class="sidebar-listMenu">
+            <li class="sidebar-link @if($pageName == "home") active @endif">
                 
                 <a href="{{route("home")}}"
-                    class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "home") bg-white/10 @endif">
+                    >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
                         <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
                         <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
@@ -92,10 +92,10 @@
                     <span class="ml-3">Inicio</span>
                 </a>
             </li>
-            <li>
+            <li class="sidebar-link @if($pageName == "profile") active @endif">
                 
                 <a href="{{route("user.profile", ["uniqueUrl" => $loggedUser->uniqueUrl])}}"
-                    class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "profile") bg-white/10 @endif">
+                    >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
@@ -105,18 +105,18 @@
             </li>
 
             @if($loggedUser != false)
-                <li>
+                <li class="sidebar-link @if($pageName == "friends") active @endif">
                     <a href="{{route("user.friends")}}"
-                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "friends") bg-white/10 @endif">
+                        >
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                         </svg>
                         <span class="flex-1 ml-3 whitespace-nowrap">Amigos</span>
                     </a>
                 </li>
-                <li>
+                <li class="sidebar-link @if($pageName == "messages") active @endif">
                     <a href="{{route("user.messages")}}"
-                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700 @if($pageName == "messages") bg-white/10 @endif">
+                        >
                         <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" fill="currentColor" class="bi bi-chat-left-fill" viewBox="0 0 16 16">
                             <path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                         </svg>
@@ -128,9 +128,9 @@
             @endif
 
             @if($loggedUser == false)
-                <li>
+                <li class="sidebar-link">
                     <a href="#"
-                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
+                        >
                         <svg aria-hidden="true"
                             class="flex-shrink-0 w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white"
                             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -142,9 +142,9 @@
                     </a>
                 </li>
 
-                <li>
+                <li class="sidebar-link">
                     <a href="#"
-                        class="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-slate-700 dark:hover:bg-gray-700">
+                        >
                         <svg aria-hidden="true"
                             class="flex-shrink-0 w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white"
                             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -153,6 +153,19 @@
                                 clip-rule="evenodd"></path>
                         </svg>
                         <span class="flex-1 ml-3 whitespace-nowrap">Sign Up</span>
+                    </a>
+                </li>
+            @endif
+            
+            @if($pageName == "home" && $loggedUser != false)
+                <li class="mt-auto sidebar-link sidebar-link--blue">
+                    <a href="{{route("page.create")}}"
+                        class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-100 transition duration-75 dark:text-gray-400 group-hover:text-gray-100 dark:group-hover:text-white" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                        </svg>
+
+                        <span class="flex-1 ml-3 whitespace-nowrap">Criar uma Página</span>
                     </a>
                 </li>
             @endif
