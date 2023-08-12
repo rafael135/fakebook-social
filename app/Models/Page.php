@@ -14,15 +14,21 @@ class Page extends Model
     protected $fillable = [
         "creator_id",
         "uniqueUrl",
+        "private",
         "name",
         "description",
+        "image_url",
         "managers",
-        "followers"
+        "followers_count"
     ];
 
 
 
     public function getCreator() {
         return $this->belongsTo(User::class, "creator_id", "id");
+    }
+
+    public function posts() {
+        return $this->hasMany(PagePost::class);
     }
 }

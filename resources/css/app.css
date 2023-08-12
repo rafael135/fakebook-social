@@ -2,6 +2,7 @@
 @import url("header.css");
 @import url("openedPost.css");
 @import url("messages.css");
+@import url("page.css");
 
 
 @tailwind base;

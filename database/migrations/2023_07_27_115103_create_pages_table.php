@@ -16,10 +16,12 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class, "creator_id");
             $table->string("uniqueUrl", 120)->nullable(false);
+            $table->boolean("private")->default(false);
             $table->string("name", 90)->nullable(false);
             $table->text("description")->default("");
-            $table->json("managers")->default();
-            $table->unsignedInteger("followers")->default(0);
+            $table->string("image_url", 120)->default("");
+            $table->json("managers")->nullable(true)->default(null);
+            $table->unsignedInteger("followers_count")->default(0);
 
             $table->timestamps();
             $table->softDeletes();

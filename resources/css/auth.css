@@ -1,6 +1,6 @@
 @layer components {
     .auth-input {
-        @apply mb-3 px-2.5 py-1.5 bg-gray-200/50 border-t-0 border-l-0 border-r-0 border-b-2 outline-none border-b-gray-600/75 focus:outline-none focus:border-b-blue-500 focus:ring-0;
+        @apply mb-3 w-full lg:w-[75%] px-2.5 py-1.5 bg-gray-200/50 outline-none border-solid border border-gray-600/75 focus:outline-none focus:border-b-blue-500 focus:ring-0;
     }
     .auth-input::placeholder {
         @apply text-gray-800/80;
@@ -13,13 +13,13 @@
     }
 
     .auth-checkBox {
-        @apply cursor-pointer me-[2px] focus:ring-0;
+        @apply w-5 h-5 cursor-pointer me-[2px] focus:ring-0;
     }
     .auth-checkBox:checked {
         @apply border-blue-600/80;
     }
     .auth-checkBox--label {
-        @apply cursor-pointer text-gray-800 font-medium text-sm focus:ring-transparent selection:ring-transparent;
+        @apply leading-none cursor-pointer text-gray-800 text-base focus:ring-transparent selection:ring-transparent;
     }
 
     .auth-redirect {
@@ -27,6 +27,20 @@
     }
 
     .auth-button {
-        @apply bg-blue-600 text-white px-4 py-2 block rounded-lg hover:bg-blue-700;
+        @apply w-full lg:w-[75%] lg:mx-auto bg-blue-600 text-white px-4 py-2 block rounded-lg hover:bg-blue-700;
+    }
+
+
+
+
+    .auth-background {
+        @apply w-[40%] relative overflow-hidden bg-cover bg-center bg-no-repeat;
+    }
+    .auth-background img {
+        max-height: calc(100vh - 64px);
+        @apply max-w-none;
+    }
+    .auth-background span {
+        @apply absolute top-0 bottom-0 left-0 right-0 bg-gray-800/60;
     }
 }

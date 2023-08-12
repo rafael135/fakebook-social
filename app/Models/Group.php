@@ -12,6 +12,20 @@ class Group extends Model
     protected $table = "groups";
 
     protected $fillable = [
-        
+        "creator_id",
+        "uniqueUrl",
+        "name",
+        "managers",
+        "description",
+        "participant_count"
     ];
+
+
+    public function creator() {
+        return $this->belongsTo(User::class, "creator_id", "id");
+    }
+
+    public function posts() {
+        return $this->hasMany(GroupPost::class);
+    }
 }
