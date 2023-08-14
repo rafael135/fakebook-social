@@ -41,7 +41,6 @@ function checkMessages(target) {
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.chat.getMessages"), {
             method: "POST",
             headers: headers,
@@ -84,7 +83,6 @@ function sendMessage(msg, userToken, targetId) {
     return __awaiter(this, void 0, void 0, function* () {
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.message.new"), {
             method: "POST",
             headers: headers,

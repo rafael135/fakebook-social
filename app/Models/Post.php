@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Post extends Model
 {
@@ -30,5 +31,19 @@ class Post extends Model
 
     public function postLike() {
         return $this->hasMany(PostLike::class, "post_id", "id");
+    }
+
+    public static function convertIdsToModels(Collection $ids): Collection {
+        $postModels = collect();
+
+        foreach($ids as $id) {
+            $post = Post::find($id);
+
+            if($post != null) {
+                $postModels->add($post);
+            }
+        }
+
+        return $postModels;
     }
 }

@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-//import Routes from "../BASE/Routes.js";
 let userTokenInput = document.getElementById("userToken");
 let postsDiv = document.querySelector("div.posts");
 let newPostForm = document.getElementById("newPostForm");
@@ -50,7 +49,6 @@ function addNewPost(btn) {
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.new"), {
             method: "POST",
             headers: headers,
@@ -66,8 +64,6 @@ function addNewPost(btn) {
         }
         let res = yield req.json();
         if (res.status === 201) {
-            //let newPost = document.querySelector("div.post")!.cloneNode(true) as HTMLDivElement;
-            // TODO -> Add new post to the page after response
             window.location.reload();
         }
     });
@@ -87,7 +83,6 @@ function deletePost() {
         }
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.delete", { id: postId }), {
             method: "DELETE",
             headers: headers,
@@ -109,7 +104,6 @@ function likePost(likeBtn, postId) {
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.like", { id: postId }), {
             method: "POST",
             headers: headers,
@@ -133,7 +127,6 @@ function likeOpenedPost(likeBtn, postId) {
         let userToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.like", { id: postId }), {
             method: "POST",
             headers: headers,
@@ -164,11 +157,9 @@ function openPost(id) {
         openedPostModal.querySelector("span.like-btn").classList.remove("liked");
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.add("loading");
         openedPostModal.querySelector("div.author--name").classList.add("loading");
         openedPostModal.querySelector("div.author--createdAt").classList.add("loading");
         openedPostModal.querySelector("div.post--text").classList.add("loading");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.get", { id: id }), {
             method: "PATCH",
             headers: headers,
@@ -183,7 +174,6 @@ function openPost(id) {
         if (res.response.user === null || res.response.post === null) {
             return;
         }
-        //(openedPostModal.querySelector("div.author--img") as HTMLDivElement).classList.remove("loading");
         openedPostModal.querySelector("div.author--name").classList.remove("loading");
         openedPostModal.querySelector("div.author--createdAt").classList.remove("loading");
         openedPostModal.querySelector("div.post--text").classList.remove("loading");
@@ -214,7 +204,6 @@ function addCommentToPost(comment) {
         newComment.setAttribute("data-comment-id", comment.id.toString());
     }
     else {
-        // @ts-ignore
         newComment.setAttribute("data-comment-id", comment.id);
     }
     if (comment.author.avatar_url == null) {
@@ -229,7 +218,6 @@ function addCommentToPost(comment) {
         newComment.querySelector("span.comment--likes").innerText = comment.like_count.toString();
     }
     else {
-        // @ts-ignore
         newComment.querySelector("span.comment--likes").innerText = comment.like_count;
     }
     openedPostComments.append(newComment);
@@ -239,7 +227,6 @@ function openComments(actionBtn) {
         let postId = parseInt(actionBtn.getAttribute("data-post-id"));
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.comments", { id: postId }), {
             method: "GET",
             headers: headers
@@ -265,7 +252,6 @@ function openComments(actionBtn) {
 }
 function makeNewComment() {
     return __awaiter(this, void 0, void 0, function* () {
-        //console.log(newCommentInput.value);
         let loggedUserToken = userTokenInput.value;
         let postId = openedPostId;
         let commentTxt = newCommentInput.value;
@@ -275,7 +261,6 @@ function makeNewComment() {
         newCommentInput.value = "";
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.post.comments.new", { id: postId }), {
             method: "POST",
             headers: headers,

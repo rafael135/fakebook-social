@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Group extends Model
 {
@@ -27,5 +28,20 @@ class Group extends Model
 
     public function posts() {
         return $this->hasMany(GroupPost::class);
+    }
+
+
+    public static function convertIdsToModels(Collection $ids): Collection {
+        $groupModels = collect();
+
+        foreach($ids as $id) {
+            $group = Group::find($id);
+
+            if($group != null) {
+                $groupModels->add($group);
+            }
+        }
+
+        return $groupModels;
     }
 }

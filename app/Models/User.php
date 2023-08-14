@@ -103,4 +103,19 @@ class User extends Authenticatable
 
         return $users;
     }
+
+    public static function convertIdsToModels(Collection $ids): Collection {
+        $userModels = collect();
+
+        
+        foreach($ids as $id) {
+            $user = User::find($id->id);
+
+            if($user != null) {
+                $userModels->add($user);
+            }
+        }
+
+        return $userModels;
+    }
 }

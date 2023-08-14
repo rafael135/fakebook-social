@@ -52,6 +52,13 @@ Route::prefix("/post")->group(function () {
 });
 //////////////////////////////
 
+// Comentarios em Posts
+Route::prefix("/comments")->group(function () {
+    Route::post("/{id}", [CommentController::class, "likeComment"])->withoutMiddleware([Authenticate::class])->name("api.comments.like");
+
+    Route::post("/{id}/reply", [CommentController::class, "replyComment"])->withoutMiddleware([Authenticate::class])->name("api.comments.reply");
+});
+
 // Posts de grupos
 Route::prefix("/group")->group(function () {
     Route::get("/{uniqueUrl}/posts", [GroupPostController::class, "posts"])->withoutMiddleware([Authenticate::class])->name("api.group.posts");

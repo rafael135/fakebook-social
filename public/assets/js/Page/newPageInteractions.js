@@ -15,19 +15,14 @@ function setImage(fileInput) {
         if (((_a = fileInput.files) === null || _a === void 0 ? void 0 : _a.length) == 0) {
             return;
         }
-        // Array with the accepted formats:
         let acceptedFormats = ["image/png", "image/jpeg", "image/jpg"];
-        // file uploaded:
         let img = fileInput.files[0];
         if (acceptedFormats.includes(img.type) == false) {
             alert("O arquivo não é suportado!");
             return;
         }
-        // Create a new instance to read the image
         const fileReader = new FileReader();
-        // Read image:
         fileReader.readAsDataURL(img);
-        // When is complete, set the source of the preview image:
         fileReader.addEventListener("load", () => {
             imagePreview.src = fileReader.result.toString();
         });

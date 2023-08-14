@@ -2,7 +2,6 @@
 
 @section("content")
     <form accordion class="max-w-5xl mx-auto" method="GET" action="{{route("search")}}">
-        @csrf
         <div class="searchBar-primary">
             <div class="type-search">
                 <select required title="Filtrar por" name="type" id="">

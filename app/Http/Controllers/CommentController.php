@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\CommentLike;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -76,5 +77,93 @@ class CommentController extends Controller
             "response" => $newComment,
             "status" => 201
         ], 201);
+    }
+
+    public static function verifyUserLike($targetId, $commentId): bool {
+        $raw = DB::table("comments_likes")->select(["id"])->where("comment_id", "=", $commentId)->where("user_id", "=", $targetId)->get();
+
+        if($raw->count() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function likeComment(Request $request) {
+        $commentId = $request->route()->parameter("id", null);
+        $usrToken = $request->input("token", null);
+
+        if($commentId == null || $usrToken == null) {
+            return response()->json([
+                "response" => [
+
+                ],
+                "status" => 400
+            ], 400);
+        }
+
+
+
+        $rawUsr = DB::table("users")->select(["id"])->where("remember_token", "=", $usrToken)->get();
+
+        if($rawUsr->count() == 0) {
+            return response()->json([
+                "response" => [
+
+                ],
+                "status" => 401
+            ], 401);
+        }
+
+        $user = User::find($rawUsr->first()->id);
+        $commentToLike = Comment::find($commentId);
+
+        $rawLike = DB::table("comments_likes")->select(["id"])->where("comment_id", "=", $commentToLike->id)->where("user_id", "=", $user->id)->get();
+
+        if($commentToLike->like_count == 0 || $rawLike->count() == 0) {
+            $commentLike = CommentLike::create([
+                "comment_id" => $commentToLike->id,
+                "user_id" => $user->id
+            ]);
+            
+            if($commentLike != null) {
+                return response()->json([
+                    "response" => [
+                        "liked" => true
+                    ],
+                    "status" => 201
+                ], 201);
+            } else {
+                return response()->json([
+                    "response" => [
+                        "liked" => null
+                    ],
+                    "status" => 500
+                ], 500);
+            }
+        }
+
+        $commentLike = CommentLike::find($rawLike->first()->id);
+        $res = $commentLike->delete();
+
+        if($res == true) {
+            return response()->json([
+                "response" => [
+                    "liked" => false
+                ],
+                "status" => 200
+            ], 200);
+        } else {
+            return response()->json([
+                "response" => [
+                    "liked" => null
+                ],
+                "status" => 500
+            ], 500);
+        }
+    }
+
+    public function replyComment(Request $request) {
+
     }
 }

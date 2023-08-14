@@ -20,7 +20,6 @@ function followProfile(spanBtn) {
         userId = parseInt(userId);
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
-        // @ts-expect-error
         let req = yield fetch(route("api.user.follow", { id: userId }), {
             method: "POST",
             headers: headers,
