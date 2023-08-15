@@ -1,4 +1,4 @@
-import { CreateNewCommentRequest, PostComment, PostLikeType, PostRequestedComments, PostType, RequestType } from "../BASE/RequestTypes.js";
+import { CreateNewCommentRequest, LikeCommentRequest, PostComment, PostLikeType, PostRequestedComments, PostType, RequestType } from "../BASE/RequestTypes.js";
 //import Routes from "../BASE/Routes.js";
 
 let userTokenInput = document.getElementById("userToken") as HTMLInputElement;
@@ -232,7 +232,7 @@ async function openPost(id: number) {
 
 
 
-    (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
+    (openedPostModal.querySelector(".post--action span.like-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
     (openedPostModal.querySelector("span.chat-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
     (openedPostModal.querySelector("span.share-btn") as HTMLSpanElement).setAttribute("data-post-id", res.response.post.id.toString());
 
@@ -251,10 +251,10 @@ async function openPost(id: number) {
     (openedPostModal.querySelector("div.post--text") as HTMLDivElement).innerText = res.response.post.body;
 
     if(res.response.post.is_liked == true) {
-        (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).classList.add("liked");
+        (openedPostModal.querySelector(".post--action span.like-btn") as HTMLSpanElement).classList.add("liked");
     }
     
-    (openedPostModal.querySelector("span.like-btn") as HTMLSpanElement).setAttribute("onClick", `likeOpenedPost(this, ${res.response.post.id})`);
+    (openedPostModal.querySelector(".post--action span.like-btn") as HTMLSpanElement).setAttribute("onClick", `likeOpenedPost(this, ${res.response.post.id})`);
 
 
 
@@ -285,22 +285,28 @@ function addCommentToPost(comment: PostComment) {
     (newComment.querySelector("div.comment--body") as HTMLDivElement).innerText = comment.body;
 
     if(Number.isInteger(comment.like_count) == true) {
-        (newComment.querySelector("span.comment--likes") as HTMLSpanElement).innerText = comment.like_count.toString();
+        (newComment.querySelector("div.comment--likes")!.querySelector("span.like-count") as HTMLSpanElement).innerText = comment.like_count.toString();
     } else {
         // @ts-ignore
-        (newComment.querySelector("span.comment--likes") as HTMLSpanElement).innerText = comment.like_count;
+        (newComment.querySelector("div.comment--likes")!.querySelector("span.like-count") as HTMLSpanElement).innerText = comment.like_count;
+    }
+
+    newComment.querySelector("div.comment--likes span.like-btn")!.setAttribute("onclick", `likeComment(this, ${comment.id})`);
+
+    if(comment.liked == true) {
+        (newComment.querySelector("div.comment--likes span.like-btn") as HTMLSpanElement).classList.add("liked");
     }
     
-
-
     openedPostComments.append(newComment);
 }
 
 async function openComments(actionBtn: HTMLSpanElement) {
     let postId = parseInt(actionBtn.getAttribute("data-post-id") as string);
+    let loggedUserToken = userTokenInput.value;
 
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
+    headers.append("usrToken", loggedUserToken);
 
     // @ts-expect-error
     let req = await fetch(route("api.post.comments", { id: postId }), {
@@ -370,8 +376,36 @@ async function makeNewComment() {
     openedPostComments.scrollTo(0, openedPostComments.scrollHeight);
 }
 
-async function likeComment(id: number) {
+async function likeComment(commentRef: HTMLSpanElement ,id: number) {
+    let loggedUserToken = userTokenInput.value;
     
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // @ts-expect-error
+    let req = await fetch(route("api.comments.like", { id: id }), {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+            id: id,
+            token: loggedUserToken
+        })
+    });
+
+    let res: LikeCommentRequest = await req.json();
+
+    if(res.status == 201) {
+        commentRef.classList.add("liked");
+        let likes = parseInt((commentRef.parentElement!.querySelector("span.like-count") as HTMLSpanElement).innerText);
+        likes++;
+        (commentRef.parentElement!.querySelector("span.like-count") as HTMLSpanElement).innerText = likes.toString();
+    } else if(res.status == 200) {
+        commentRef.classList.remove("liked");
+        let likes = parseInt((commentRef.parentElement!.querySelector("span.like-count") as HTMLSpanElement).innerText);
+        likes--;
+        (commentRef.parentElement!.querySelector("span.like-count") as HTMLSpanElement).innerText = likes.toString();
+    }
+
 }
 
 async function replyComment(id: number) {

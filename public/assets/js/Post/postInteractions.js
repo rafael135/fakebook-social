@@ -177,7 +177,7 @@ function openPost(id) {
         openedPostModal.querySelector("div.author--name").classList.remove("loading");
         openedPostModal.querySelector("div.author--createdAt").classList.remove("loading");
         openedPostModal.querySelector("div.post--text").classList.remove("loading");
-        openedPostModal.querySelector("span.like-btn").setAttribute("data-post-id", res.response.post.id.toString());
+        openedPostModal.querySelector(".post--action span.like-btn").setAttribute("data-post-id", res.response.post.id.toString());
         openedPostModal.querySelector("span.chat-btn").setAttribute("data-post-id", res.response.post.id.toString());
         openedPostModal.querySelector("span.share-btn").setAttribute("data-post-id", res.response.post.id.toString());
         if (res.response.user.avatar !== null) {
@@ -191,9 +191,9 @@ function openPost(id) {
         openedPostModal.querySelector("div.author--createdAt").innerText = date.toLocaleString();
         openedPostModal.querySelector("div.post--text").innerText = res.response.post.body;
         if (res.response.post.is_liked == true) {
-            openedPostModal.querySelector("span.like-btn").classList.add("liked");
+            openedPostModal.querySelector(".post--action span.like-btn").classList.add("liked");
         }
-        openedPostModal.querySelector("span.like-btn").setAttribute("onClick", `likeOpenedPost(this, ${res.response.post.id})`);
+        openedPostModal.querySelector(".post--action span.like-btn").setAttribute("onClick", `likeOpenedPost(this, ${res.response.post.id})`);
         openComments(openedPostModal.querySelector("span.chat-btn"));
     });
 }
@@ -215,18 +215,24 @@ function addCommentToPost(comment) {
     newComment.querySelector("span.comment--author").innerText = comment.author.name;
     newComment.querySelector("div.comment--body").innerText = comment.body;
     if (Number.isInteger(comment.like_count) == true) {
-        newComment.querySelector("span.comment--likes").innerText = comment.like_count.toString();
+        newComment.querySelector("div.comment--likes").querySelector("span.like-count").innerText = comment.like_count.toString();
     }
     else {
-        newComment.querySelector("span.comment--likes").innerText = comment.like_count;
+        newComment.querySelector("div.comment--likes").querySelector("span.like-count").innerText = comment.like_count;
+    }
+    newComment.querySelector("div.comment--likes span.like-btn").setAttribute("onclick", `likeComment(this, ${comment.id})`);
+    if (comment.liked == true) {
+        newComment.querySelector("div.comment--likes span.like-btn").classList.add("liked");
     }
     openedPostComments.append(newComment);
 }
 function openComments(actionBtn) {
     return __awaiter(this, void 0, void 0, function* () {
         let postId = parseInt(actionBtn.getAttribute("data-post-id"));
+        let loggedUserToken = userTokenInput.value;
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
+        headers.append("usrToken", loggedUserToken);
         let req = yield fetch(route("api.post.comments", { id: postId }), {
             method: "GET",
             headers: headers
@@ -277,8 +283,32 @@ function makeNewComment() {
         openedPostComments.scrollTo(0, openedPostComments.scrollHeight);
     });
 }
-function likeComment(id) {
+function likeComment(commentRef, id) {
     return __awaiter(this, void 0, void 0, function* () {
+        let loggedUserToken = userTokenInput.value;
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        let req = yield fetch(route("api.comments.like", { id: id }), {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                id: id,
+                token: loggedUserToken
+            })
+        });
+        let res = yield req.json();
+        if (res.status == 201) {
+            commentRef.classList.add("liked");
+            let likes = parseInt(commentRef.parentElement.querySelector("span.like-count").innerText);
+            likes++;
+            commentRef.parentElement.querySelector("span.like-count").innerText = likes.toString();
+        }
+        else if (res.status == 200) {
+            commentRef.classList.remove("liked");
+            let likes = parseInt(commentRef.parentElement.querySelector("span.like-count").innerText);
+            likes--;
+            commentRef.parentElement.querySelector("span.like-count").innerText = likes.toString();
+        }
     });
 }
 function replyComment(id) {

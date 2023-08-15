@@ -109,6 +109,7 @@ export type PostComment = {
     post_id: number;
     body: string;
     like_count: number;
+    liked: boolean;
 }
 
 export type PostRequestedComments = {
@@ -119,5 +120,10 @@ export type PostRequestedComments = {
 
 export type CreateNewCommentRequest = {
     response: PostComment,
+    status: number;
+}
+
+export type LikeCommentRequest = {
+    response: boolean | null;
     status: number;
 }

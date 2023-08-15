@@ -70,6 +70,7 @@ class PostController extends Controller
 
     public function getComments(Request $request) : JsonResponse {
         $id = $request->route()->parameter("id", null);
+        $token = $request->header("usrToken", null);
 
         if($id == null) {
             return response()->json([
@@ -87,9 +88,17 @@ class PostController extends Controller
             ], 404);
         }
 
-        $comments = $post->comments;
+        $raw = DB::table("users")->select(["id"])->where("remember_token", "=", $token)->get();
 
+        $loggedUser = null;
+
+        if($raw->count() > 0) {
+            $loggedUser = User::find($raw->first()->id);
+        }
+
+        $comments = $post->comments;
         $comments = CommentController::getCommentsAuthor($comments);
+        $comments = CommentController::getLikedComments($comments, $loggedUser);
 
         return response()->json([
             "response" => $comments,

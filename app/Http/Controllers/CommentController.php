@@ -27,6 +27,28 @@ class CommentController extends Controller
         return $verifiedComments;
     }
 
+    public static function getLikedComments(Collection $comments, User | null $targetUser) : Collection{
+        $verifiedComments = collect();
+
+        foreach($comments as $comment) {
+            if($targetUser != null) {
+                $rawCommentLike = DB::table("comments_likes")->select(["id"])->where("comment_id", "=", $comment->id)->where("user_id", "=", $targetUser->id)->get();
+
+                if($rawCommentLike->count() > 0) {
+                    $comment["liked"] = true;
+                } else {
+                    $comment["liked"] = false;
+                }
+            } else {
+                $comment["liked"] = false;
+            }
+
+            $verifiedComments->add($comment);
+        }
+
+        return $verifiedComments;
+    }
+
     public function newComment(Request $request) : JsonResponse {
         $postId = $request->route()->parameter("id", null);
         $userToken = $request->input("userToken", null);
@@ -95,9 +117,7 @@ class CommentController extends Controller
 
         if($commentId == null || $usrToken == null) {
             return response()->json([
-                "response" => [
-
-                ],
+                "response" => null,
                 "status" => 400
             ], 400);
         }
@@ -108,9 +128,7 @@ class CommentController extends Controller
 
         if($rawUsr->count() == 0) {
             return response()->json([
-                "response" => [
-
-                ],
+                "response" => null,
                 "status" => 401
             ], 401);
         }
@@ -127,17 +145,16 @@ class CommentController extends Controller
             ]);
             
             if($commentLike != null) {
+                $commentToLike->like_count++;
+                $commentToLike->save();
+
                 return response()->json([
-                    "response" => [
-                        "liked" => true
-                    ],
+                    "response" => true,
                     "status" => 201
                 ], 201);
             } else {
                 return response()->json([
-                    "response" => [
-                        "liked" => null
-                    ],
+                    "response" => null,
                     "status" => 500
                 ], 500);
             }
@@ -147,17 +164,16 @@ class CommentController extends Controller
         $res = $commentLike->delete();
 
         if($res == true) {
+            $commentToLike->like_count--;
+            $commentToLike->save();
+
             return response()->json([
-                "response" => [
-                    "liked" => false
-                ],
+                "response" => false,
                 "status" => 200
             ], 200);
         } else {
             return response()->json([
-                "response" => [
-                    "liked" => null
-                ],
+                "response" => null,
                 "status" => 500
             ], 500);
         }

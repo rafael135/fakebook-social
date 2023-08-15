@@ -58,7 +58,22 @@
         @apply text-sm ms-1 max-w-128;
     }
     .post--comment .comment--likes {
-        @apply absolute cursor-pointer -bottom-2 right-16 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5;
+        @apply absolute flex items-center -bottom-2 right-16 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5;
+    }
+    .post--comment .comment--likes .like-btn {
+        @apply absolute -left-4 cursor-pointer transition-all ease-in-out duration-150;
+    }
+    .post--comment .comment--likes .like-btn svg {
+        @apply w-4 h-4 fill-gray-600/80 transition-all ease-in-out duration-150;
+    }
+    .post--comment .comment--likes .like-btn:hover svg {
+        @apply fill-blue-500;
+    }
+    .post--comment .comment--likes .like-btn.liked svg {
+        @apply fill-blue-600;
+    }
+    .post--comment .comment--likes .like-count {
+        @apply text-slate-900 font-bold text-xs;
     }
     .post--comment .comment--reply {
         @apply absolute cursor-pointer -bottom-2 -right-4 text-slate-900 font-bold text-xs rounded-md bg-slate-300 bg-opacity-65 px-2 py-0.5 hover:underline;
