@@ -70,6 +70,7 @@
             </span>
         </div>
 
+        <!--
         <div class="flex-1 flex justify-center items-center">
             <span class="chat-btn font-semibold flex justify-center items-center text-gray-700 text-lg cursor-pointer hover:text-blue-600 active:text-blue-700" onclick="openComments({{$post->id}})">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" class="bi bi-chat-left-fill" viewBox="0 0 16 16">
@@ -78,6 +79,7 @@
                 <div class="ms-1">Comentários</div>
             </span>
         </div>
+        -->
 
         <div class="flex-1 flex justify-center items-center">
             <span class="share-btn font-semibold flex justify-center items-center text-gray-700 text-lg cursor-pointer hover:text-blue-600 active:text-blue-700" onclick="sharePost({{$post->id}})">

@@ -4,6 +4,7 @@
 @import url("messages.css");
 @import url("page.css");
 @import url("group.css");
+@import url("friends.css");
 
 
 @tailwind base;

@@ -31,7 +31,7 @@ function followProfile(spanBtn) {
         if (res.status >= 400 && res.status <= 420) {
             return;
         }
-        let followersCountLink = (_b = (_a = spanBtn.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.querySelector("a.follower-count");
+        let followersCountLink = (_b = (_a = spanBtn.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.querySelector("span.follower-count");
         if (res.status === 200) {
             let refreshedCount = parseInt(followersCountLink.innerText) - 1;
             followersCountLink.innerText = refreshedCount.toString();

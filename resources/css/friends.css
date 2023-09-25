@@ -1,5 +1,53 @@
 @layer components {
     .friends-main-screen {
-        
+        height: calc(100vh - 64px);
+        @apply w-full overflow-hidden;
+    }
+    .friends-main-screen .friends-list--header {
+        @apply my-2 mx-4 text-4xl font-semibold;
+    }
+    .friends-main-screen .friends-list {
+        @apply flex flex-row justify-evenly gap-2 p-4 w-full max-h-full;
+    }
+    .friends-list .friend-card {
+        @apply relative w-[33.3333%] max-w-[33.3333%] h-auto p-2 flex flex-row bg-gray-100 border border-solid border-gray-400/40 rounded-md shadow-lg cursor-pointer transition-all ease-in-out duration-150;
+    }
+    .friends-list .friend-card:hover {
+        @apply scale-[102%];
+    }
+    .friends-list .friend-card:active {
+        @apply bg-gray-300;
+    }
+    .friends-list .friend-card .friend-link {
+        @apply absolute left-0 bottom-0 right-0 top-0;
+    }
+    .friends-list .friend-card .friend-time {
+        @apply absolute bottom-0 right-0 flex flex-col px-1 py-0.5 border border-solid border-t-gray-400/40 border-l-gray-400/40;
+    }
+    .friends-list .friend-card .friend-time .friend-time--header {
+        font-size: 12px;
+        line-height: 14px;
+        @apply text-center font-light;
+    }
+    
+    .friends-list .friend-card .friend-time .friend-time--date {
+        font-size: 14px;
+        line-height: 16px;
+        @apply text-center font-light;
+    }
+    .friends-list .friend-card .friend-img {
+
+    }
+    .friends-list .friend-card .friend-img img {
+        @apply w-16 h-16 rounded-full;
+    }
+    .friends-list .friend-card .friend-info {
+        @apply flex flex-col;
+    }
+    .friends-list .friend-card .friend-info .friend-name {
+        @apply text-xl mt-0.5 ms-1 text-slate-800 transition-all ease-in-out duration-150;
+    }
+    .friends-list .friend-card:hover .friend-info .friend-name {
+        @apply text-blue-500;
     }
 }

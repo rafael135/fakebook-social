@@ -7,15 +7,14 @@
     
 
     <div class="friends-main-screen">
+        <h2 class="friends-list--header">Amigos</h2>
         <div class="friends-list">
             @foreach ($friends as $friend)
                 <x-friend_card :friend="$friend"/>
             @endforeach
         </div>
 
-        <div class="friend-active-chat" id="activeChat" data-active-friend="">
-            
-        </div>
+        
     </div>
 
     

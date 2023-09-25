@@ -45,6 +45,7 @@ Route::prefix("/user")->group(function () {
     Route::get("/messages", [MessageController::class, "showMessages"])->middleware([Authenticate::class])->name("user.messages");
 
     Route::get("/{uniqueUrl}", [UserController::class, "showUser"])->name("user.profile");
+    Route::get("/{uniqueUrl}/friends", [FriendRelationsController::class, "showUserListFriends"])->name("user.listFriends");
     Route::get("/{uniqueUrl}/followers", [UserController::class, "showUserFollowers"])->name("user.followers");
     Route::get("/{uniqueUrl}/following", [UserController::class, "showUserFollowing"])->name("user.following");
 });

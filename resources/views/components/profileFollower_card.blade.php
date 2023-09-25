@@ -15,8 +15,13 @@
         </div>
 
         <div class="flex-1 relative flex flex-col items-end justify-end py-1.5 px-2">
-            <p>Seguidores: <a class="follower-count text-blue-500 p-0.5 rounded-md hover:bg-black/5" href="{{route("user.followers", ["uniqueUrl" => $follower->uniqueUrl ])}}">{{ $follower->followers()->count() }}</a></p>
-            <p>Seguindo: <a class="following-count text-blue-500 p-0.5 rounded-md hover:bg-black/5" href="{{route("user.following", ["uniqueUrl" => $follower->uniqueUrl ])}}">{{ $follower->following()->count() }}</a></p>
+            <a class="text-slate-800 p-0.5 rounded-md hover:bg-black/5" href="{{route("user.listFriends", ["uniqueUrl" => $follower->uniqueUrl])}}">
+                <p>Seguidores: <span class="follower-count text-blue-500 p-0.5">{{ $follower->followers()->count() }}</span></p>
+            </a>
+
+            <a class="text-slate-800 p-0.5 rounded-md hover:bg-black/5" href="{{route("user.listFriends", ["uniqueUrl" => $follower->uniqueUrl])}}">
+                <p>Seguindo: <span class="following-count text-blue-500 p-0.5">{{ $follower->following()->count() }}</span></p>
+            </a>
         </div>
     </div>
 </div>

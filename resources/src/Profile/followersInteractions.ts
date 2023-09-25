@@ -31,7 +31,7 @@ async function followProfile(spanBtn: HTMLSpanElement) {
     }
 
     
-    let followersCountLink = spanBtn.parentElement?.parentElement?.querySelector("a.follower-count") as HTMLAnchorElement;
+    let followersCountLink = spanBtn.parentElement?.parentElement?.querySelector("span.follower-count") as HTMLSpanElement;
 
     if(res.status === 200) {
         
